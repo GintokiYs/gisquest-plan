@@ -3,6 +3,7 @@ package com.gisquest.plan.service.config;
 import com.gisquest.plan.service.security.AuthenticationEntryPointImpl;
 import com.gisquest.plan.service.security.JwtAuthenticationFilter;
 import com.gisquest.plan.service.security.JwtAuthenticationProvider;
+import com.gisquest.plan.service.security.JwtLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 其余需要身份验证
                 .anyRequest().authenticated()
                 .and()
+               // .addFilterBefore(new JwtLoginFilter(authenticationManager()),UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)// 无状态session

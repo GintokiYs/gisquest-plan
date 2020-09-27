@@ -11,7 +11,4 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:constant.properties")
 public class Constant {
-    public static final String CONTENTTYPE = "Content-Type";
-    public static final String FORMLOGIN = "application/x-www-form-urlencoded; charset=UTF-8";
-    public static final String JSONLOGIN = "application/json";
 }
