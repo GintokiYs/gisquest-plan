@@ -18,7 +18,7 @@ public interface SearchService {
 
     ResponseResult fuzzySearch(String searchContent);
 
-    ResponseResult searchByTopic(String topic);
+    ResponseResult searchByTopic(String topicId);
 
     ResponseResult searchCondition(List<String> quataIdList, String fieldName);
 

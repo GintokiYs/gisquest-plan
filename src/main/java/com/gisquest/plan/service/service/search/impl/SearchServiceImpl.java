@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author ：yeyh
@@ -33,14 +34,22 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseResult fuzzySearch(String searchContent) {
         List<QuataVo> quataList = searchMapper.fuzzySearch("%" + searchContent + "%");
+        for (QuataVo quataVo : quataList) {
+            //tableName 填充完整表名
+            quataVo.setTableName("t" + TransformUtil.frontCompWithZore(quataVo.getTableName(), 6));
+        }
         ResponseResult<List<QuataVo>> ok = ResponseResult.ok();
         ok.setData(quataList);
         return ok;
     }
 
     @Override
-    public ResponseResult searchByTopic(String topic) {
-        List<QuataVo> quataList = searchMapper.searchByTopic(topic);
+    public ResponseResult searchByTopic(String topicId) {
+        List<QuataVo> quataList = searchMapper.searchByTopicId(topicId);
+        for (QuataVo quataVo : quataList) {
+            //tableName 填充完整表名
+            quataVo.setTableName("t" + TransformUtil.frontCompWithZore(quataVo.getTableName(), 6));
+        }
         ResponseResult<List<QuataVo>> ok = ResponseResult.ok();
         ok.setData(quataList);
         return ok;
@@ -48,7 +57,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public ResponseResult searchCondition(List<String> quataIdList, String fieldName) {
-        HashSet<String> strSet = new HashSet<>();
+        TreeSet<String> strSet = new TreeSet<>();
         for (String quataId : quataIdList) {
             int tableName = searchMapper.searchTableName(quataId);
             System.out.println(tableName);

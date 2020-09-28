@@ -17,12 +17,12 @@
     where t1.type like #{searchContent,jdbcType=VARCHAR};
   </select>
 
-  <select id="searchByTopic" parameterType="java.lang.String" resultMap="QuataVoMap">
+  <select id="searchByTopicId" parameterType="java.lang.String" resultMap="QuataVoMap">
     select
     t1.id id,t3."type" topic,t2.type first_quata,t1.type second_quata,t1.alias alias
     from target_classify t1 join business_classify t2 on t1.business_parentid = t2.id
     join resource_classify t3 on t2.resource_parentid = t3.id
-    where t3.type = #{topic,jdbcType=VARCHAR};
+    where t3.id = #{topic,jdbcType=VARCHAR};
   </select>
 
   <select id="searchTableName" parameterType="java.lang.String" resultType="java.lang.Integer">

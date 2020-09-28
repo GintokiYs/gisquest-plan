@@ -5,6 +5,7 @@ import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.QuataDataVo;
 import com.gisquest.plan.service.vo.quata.QuataSearchVo;
 import com.gisquest.plan.service.vo.quata.QuataVo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
  * @description：
  * @modified By：
  */
+@Api(tags = "查询", description = "查询接口")
 @RestController
 @RequestMapping("/search")
 public class SearchController {
@@ -41,9 +43,9 @@ public class SearchController {
     }
 
     @ApiOperation("根据所选主题展示一级指标，二级指标")
-    @GetMapping("/byTopic/{topic}")
-    public ResponseResult searchByTopic(@PathVariable String topic) {
-        return searchService.searchByTopic(topic);
+    @GetMapping("/byTopic/{topicId}")
+    public ResponseResult searchByTopic(@PathVariable String topicId) {
+        return searchService.searchByTopic(topicId);
     }
 
     @ApiOperation("根据指标获取 筛选条件的数值")

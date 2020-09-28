@@ -16,7 +16,7 @@ import java.util.List;
 public interface SearchMapper {
     List<QuataVo> fuzzySearch(String searchContent);
 
-    List<QuataVo> searchByTopic(String topic);
+    List<QuataVo> searchByTopicId(String topic);
 
     Integer searchTableName(String quataId);
 
