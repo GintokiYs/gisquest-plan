@@ -8,9 +8,6 @@
     <result column="second_quata" property="secondQuata" jdbcType="VARCHAR" />
     <result column="alias" property="tableName" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, user_name, password
-  </sql>
 
   <select id="fuzzySearch" parameterType="java.lang.String" resultMap="QuataVoMap">
     select
@@ -28,11 +25,11 @@
     where t3.type = #{topic,jdbcType=VARCHAR};
   </select>
 
-  <select id="searchTableName" parameterType="java.lang.String" resultType="java.lang.String">
+  <select id="searchTableName" parameterType="java.lang.String" resultType="java.lang.Integer">
     select
-    alias::VARCHAR
-    from target_classify t1
-    where t1.id = #{quataId,jdbcType=VARCHAR};
+    alias
+    from target_classify
+    where id = #{quataId,jdbcType=VARCHAR};
   </select>
 
   <select id="searchCondition" parameterType="java.lang.String" resultType="java.lang.String">
@@ -40,6 +37,5 @@
     DISTINCT ${fieldName}
     from ${tableName};
   </select>
-
 
 </mapper>

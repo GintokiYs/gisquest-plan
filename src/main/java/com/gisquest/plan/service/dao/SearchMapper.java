@@ -18,7 +18,7 @@ public interface SearchMapper {
 
     List<QuataVo> searchByTopic(String topic);
 
-    String searchTableName(String quataId);
+    Integer searchTableName(String quataId);
 
     List<String> searchCondition(@Param("tableName") String tableName,@Param("fieldName") String fieldName);
 }

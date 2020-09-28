@@ -2,6 +2,7 @@ package com.gisquest.plan.service.service.search.impl;
 
 import com.gisquest.plan.service.dao.SearchMapper;
 import com.gisquest.plan.service.service.search.SearchService;
+import com.gisquest.plan.service.utils.TransformUtil;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.QuataDataVo;
 import com.gisquest.plan.service.vo.quata.QuataSearchVo;
@@ -49,10 +50,9 @@ public class SearchServiceImpl implements SearchService {
     public ResponseResult searchCondition(List<String> quataIdList, String fieldName) {
         HashSet<String> strSet = new HashSet<>();
         for (String quataId : quataIdList) {
-            String tableName = searchMapper.searchTableName(quataId);
-            tableName = "t00000" + tableName;
+            int tableName = searchMapper.searchTableName(quataId);
             System.out.println(tableName);
-            List<String> strList = searchMapper.searchCondition(tableName, fieldName);
+            List<String> strList = searchMapper.searchCondition("t" + TransformUtil.frontCompWithZore(tableName, 6), fieldName);
             strSet.addAll(strList);
         }
         ResponseResult<Set<String>> ok = ResponseResult.ok();
