@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.gisquest.plan.service.dao.businessClassifyMapper" >
+<mapper namespace="com.gisquest.plan.service.dao.BusinessClassifyMapper" >
   <resultMap id="BaseResultMap" type="com.gisquest.plan.service.model.businessClassify.businessClassify" >
     <result column="id" property="id" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
@@ -8,5 +8,22 @@
     <result column="resource_parentid" property="resourceParentid" jdbcType="VARCHAR" />
     <result column="desc" property="desc" jdbcType="VARCHAR" />
   </resultMap>
+
+  <resultMap id="BaseResultList" type="com.gisquest.plan.service.vo.quata.TargetResponse" >
+      <result column="id" property="id" jdbcType="VARCHAR" />
+      <result column="type" property="firstQuata" jdbcType="VARCHAR" />
+      <collection property="list" javaType="java.util.ArrayList" ofType="com.gisquest.plan.service.vo.quata.targetClassifyResponse">
+          <result column="PID" property="id" jdbcType="VARCHAR" />
+          <result column="alias" property="alias" jdbcType="VARCHAR" />
+          <result column="secondQuata" property="secondQuata" jdbcType="VARCHAR" />
+      </collection>
+
+  </resultMap>
+
+  <select id="getTargetById" resultMap="BaseResultList" resultType="java.lang.String">
+    select bc.id,bc.type,tc.id PID,tc.alias,tc.type secondQuata  from (select * from business_classify where resource_parentid = #{resourceParentid,jdbcType=VARCHAR}) bc left join target_classify tc on bc.id = tc.business_parentid
+
+  </select>
+
 
 </mapper>

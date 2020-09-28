@@ -8,6 +8,12 @@
     <result column="second_quata" property="secondQuata" jdbcType="VARCHAR" />
     <result column="alias" property="tableName" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="BaseResultMap" type="com.gisquest.plan.service.vo.quata.QuataResponse">
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="source_year" property="sourceYear" jdbcType="VARCHAR" />
+  </resultMap>
 
   <select id="fuzzySearch" parameterType="java.lang.String" resultMap="QuataVoMap">
     select
@@ -36,6 +42,24 @@
     select
     DISTINCT ${fieldName}
     from ${tableName};
+  </select>
+
+  <select id="getTargetList" resultMap="BaseResultMap">
+    select * from ${quataSearchResponse.tableName}
+    <trim prefix="where" prefixOverrides="and |or">
+      <if test="quataSearchResponse.year !=null and quataSearchResponse.year != ''">
+        and year = #{quataSearchResponse.year}
+      </if>
+      <if test="quataSearchResponse.area !=null and quataSearchResponse.area != ''">
+        and area = #{quataSearchResponse.area}
+      </if>
+      <if test="quataSearchResponse.dataSource !=null and quataSearchResponse.dataSource != ''">
+        and source = #{quataSearchResponse.dataSource}
+      </if>
+      <if test="quataSearchResponse.collectYear !=null and quataSearchResponse.collectYear != ''">
+        and source_year = #{quataSearchResponse.collectYear}
+      </if>
+    </trim>
   </select>
 
 </mapper>
