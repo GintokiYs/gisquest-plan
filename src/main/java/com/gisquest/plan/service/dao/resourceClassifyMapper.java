@@ -1,9 +1,13 @@
 package com.gisquest.plan.service.dao;
 
 import com.gisquest.plan.service.model.resourceClassify.resourceClassify;
+import com.gisquest.plan.service.vo.quata.QuataVo;
+import org.springframework.stereotype.Repository;
 
-public interface resourceClassifyMapper {
-    int insert(resourceClassify record);
+import java.util.List;
 
-    int insertSelective(resourceClassify record);
+@Repository
+public interface ResourceClassifyMapper {
+
+    List<QuataVo> getAllTopic();
 }

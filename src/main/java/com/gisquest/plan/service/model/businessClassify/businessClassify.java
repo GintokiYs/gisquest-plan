@@ -7,7 +7,7 @@ public class businessClassify {
 
     private String alias;
 
-    private Integer resourceParentid;
+    private String resourceParentid;
 
     private String desc;
 
@@ -35,11 +35,11 @@ public class businessClassify {
         this.alias = alias == null ? null : alias.trim();
     }
 
-    public Integer getResourceParentid() {
+    public String getResourceParentid() {
         return resourceParentid;
     }
 
-    public void setResourceParentid(Integer resourceParentid) {
+    public void setResourceParentid(String resourceParentid) {
         this.resourceParentid = resourceParentid;
     }
 
