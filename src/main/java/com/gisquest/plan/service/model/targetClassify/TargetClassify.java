@@ -1,6 +1,6 @@
 package com.gisquest.plan.service.model.targetClassify;
 
-public class targetClassify {
+public class TargetClassify {
     private String id;
 
     private String type;

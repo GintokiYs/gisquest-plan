@@ -1,6 +1,7 @@
 package com.gisquest.plan.service.service.resourceClassify;
 
 import com.gisquest.plan.service.vo.quata.QuataVo;
+import com.gisquest.plan.service.vo.quata.TargetResponse;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ import java.util.List;
  */
 public interface ResourceClassifyService {
     List<QuataVo> getAllTopic();
+
 }

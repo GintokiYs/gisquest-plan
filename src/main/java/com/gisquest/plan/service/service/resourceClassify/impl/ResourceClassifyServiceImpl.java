@@ -3,6 +3,7 @@ package com.gisquest.plan.service.service.resourceClassify.impl;
 import com.gisquest.plan.service.dao.ResourceClassifyMapper;
 import com.gisquest.plan.service.service.resourceClassify.ResourceClassifyService;
 import com.gisquest.plan.service.vo.quata.QuataVo;
+import com.gisquest.plan.service.vo.quata.TargetResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

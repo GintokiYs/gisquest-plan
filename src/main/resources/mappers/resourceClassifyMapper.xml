@@ -6,8 +6,12 @@
     <result column="type" property="topic" jdbcType="VARCHAR" />
   </resultMap>
 
+
   <select id="getAllTopic" resultMap="BaseResultMap">
     select * from resource_classify where parentid = '2'
   </select>
+
+
+
 
 </mapper>

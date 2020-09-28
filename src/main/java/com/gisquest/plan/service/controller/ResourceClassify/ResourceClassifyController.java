@@ -27,4 +27,5 @@ public class ResourceClassifyController {
     public ResponseResult getAllTopic() {
         return ResponseResult.ok(resourceClassifyService.getAllTopic());
     }
+
 }
