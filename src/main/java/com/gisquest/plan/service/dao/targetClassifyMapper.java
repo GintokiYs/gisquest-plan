@@ -1,11 +1,11 @@
 package com.gisquest.plan.service.dao;
 
-import com.gisquest.plan.service.model.targetClassify.targetClassify;
+import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface targetClassifyMapper {
-    int insert(targetClassify record);
+import java.util.List;
 
-    int insertSelective(targetClassify record);
+@Repository
+public interface TargetClassifyMapper {
+    TargetClassify getTable(String quataId);
 }

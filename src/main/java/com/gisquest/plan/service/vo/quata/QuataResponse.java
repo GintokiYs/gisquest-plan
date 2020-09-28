@@ -17,6 +17,8 @@ public class QuataResponse implements Serializable {
 
     private String sourceYear;
 
+    private String target; //指标量
+
     public String getArea() {
         return area;
     }
@@ -55,5 +57,13 @@ public class QuataResponse implements Serializable {
 
     public void setSourceYear(String sourceYear) {
         this.sourceYear = sourceYear;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 }

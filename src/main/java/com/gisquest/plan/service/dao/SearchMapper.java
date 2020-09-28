@@ -27,4 +27,10 @@ public interface SearchMapper {
 
     List<QuataResponse> getTargetList(@Param("quataSearchResponse")QuataSearchResponse quataSearchResponse);
 
+    List<String> getTargetYear(@Param("tableName") String tableName);
+
+    Integer getTargetAvg(@Param("tableName") String tableName,@Param("year") int year);
+
+    List<QuataResponse> getTargetMedian(@Param("tableName") String tableName,@Param("year") int year);
+
 }

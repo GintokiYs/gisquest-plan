@@ -1,11 +1,12 @@
 package com.gisquest.plan.service.dao;
 
 import com.gisquest.plan.service.model.businessClassify.businessClassify;
+import com.gisquest.plan.service.vo.quata.TargetResponse;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface businessClassifyMapper {
-    int insert(businessClassify record);
+import java.util.List;
 
-    int insertSelective(businessClassify record);
+@Repository
+public interface BusinessClassifyMapper {
+    List<TargetResponse> getTargetById(String resourceParentid);
 }

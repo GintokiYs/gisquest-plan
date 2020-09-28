@@ -3,6 +3,7 @@ package com.gisquest.plan.service.service.businessClassify;
 import com.gisquest.plan.service.vo.quata.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author honght
@@ -12,5 +13,5 @@ public interface BusinessClassifyService {
 
     List<TargetResponse> getTargetById(String resourceParentid);
 
-    List<QuataResponse> getTargetList(QuataSearchResponse quataSearchResponse);
+    Map<String, Object> getTargetList(QuataSearchResponse quataSearchResponse);
 }

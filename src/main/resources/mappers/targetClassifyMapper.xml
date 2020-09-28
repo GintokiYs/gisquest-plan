@@ -10,9 +10,9 @@
   </resultMap>
 
   <select id="getTable" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select
-    *
-    from target_classify
+    select *from target_classify
     where id = #{quataId,jdbcType=VARCHAR};
   </select>
+
+
 </mapper>
