@@ -1,6 +1,10 @@
 package com.gisquest.plan.service.dao;
 
+import com.gisquest.plan.service.vo.quata.QuataVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author ：yeyh
@@ -10,4 +14,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SearchMapper {
+    List<QuataVo> fuzzySearch(String searchContent);
+
+    List<QuataVo> searchByTopic(String topic);
+
+    String searchTableName(String quataId);
+
+    List<String> searchCondition(@Param("tableName") String tableName,@Param("fieldName") String fieldName);
 }

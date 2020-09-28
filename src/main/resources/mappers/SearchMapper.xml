@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gisquest.plan.service.dao.SearchMapper" >
+  <resultMap id="QuataVoMap" type="com.gisquest.plan.service.vo.quata.QuataVo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="topic" property="topic" jdbcType="VARCHAR" />
+    <result column="first_quata" property="firstQuata" jdbcType="VARCHAR" />
+    <result column="second_quata" property="secondQuata" jdbcType="VARCHAR" />
+    <result column="alias" property="tableName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_name, password
+  </sql>
+
+  <select id="fuzzySearch" parameterType="java.lang.String" resultMap="QuataVoMap">
+    select
+    t1.id id,t3."type" topic,t2.type first_quata,t1.type second_quata,t1.alias alias
+    from target_classify t1 join business_classify t2 on t1.business_parentid = t2.id
+    join resource_classify t3 on t2.resource_parentid = t3.id
+    where t1.type like #{searchContent,jdbcType=VARCHAR};
+  </select>
+
+  <select id="searchByTopic" parameterType="java.lang.String" resultMap="QuataVoMap">
+    select
+    t1.id id,t3."type" topic,t2.type first_quata,t1.type second_quata,t1.alias alias
+    from target_classify t1 join business_classify t2 on t1.business_parentid = t2.id
+    join resource_classify t3 on t2.resource_parentid = t3.id
+    where t3.type = #{topic,jdbcType=VARCHAR};
+  </select>
+
+  <select id="searchTableName" parameterType="java.lang.String" resultType="java.lang.String">
+    select
+    alias::VARCHAR
+    from target_classify t1
+    where t1.id = #{quataId,jdbcType=VARCHAR};
+  </select>
+
+  <select id="searchCondition" parameterType="java.lang.String" resultType="java.lang.String">
+    select
+    DISTINCT ${fieldName}
+    from ${tableName};
+  </select>
+
+
+</mapper>

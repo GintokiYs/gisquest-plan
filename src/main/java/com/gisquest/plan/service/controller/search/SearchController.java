@@ -37,29 +37,20 @@ public class SearchController {
     @ApiOperation("根据输入框内容搜索符合模糊匹配规则的指标")
     @GetMapping("/fuzzy")
     public ResponseResult fuzzySearch(@RequestParam String searchContent) {
-        List<QuataVo> quataList = searchService.fuzzySearch(searchContent);
-        ResponseResult<List<QuataVo>> ok = ResponseResult.ok();
-        ok.setData(quataList);
-        return ok;
+        return searchService.fuzzySearch(searchContent);
     }
 
     @ApiOperation("根据所选主题展示一级指标，二级指标")
     @GetMapping("/byTopic/{topic}")
     public ResponseResult searchByTopic(@PathVariable String topic) {
-        List<QuataDataVo> quataDataVoList = searchService.searchByTopic(topic);
-        ResponseResult<List<QuataDataVo>> ok = ResponseResult.ok();
-        ok.setData(quataDataVoList);
-        return ok;
+        return searchService.searchByTopic(topic);
     }
 
     @ApiOperation("根据指标获取 筛选条件的数值")
     @GetMapping("/condition")
     public ResponseResult searchCondition(@RequestParam("quataIdList") List<String> quataIdList, @RequestParam("fieldName") String fieldName) {
         //todo 创建工具类可以对fieldName 做匹配转换
-        List<String> conditionList = searchService.searchCondition(quataIdList, fieldName);
-        ResponseResult<List<String>> ok = ResponseResult.ok();
-        ok.setData(conditionList);
-        return ok;
+        return searchService.searchCondition(quataIdList, fieldName);
     }
 
     @ApiOperation("根据选择的指标列表，年份，区域等条件查询指标明细")

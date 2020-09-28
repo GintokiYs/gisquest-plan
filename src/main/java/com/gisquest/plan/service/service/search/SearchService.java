@@ -1,5 +1,6 @@
 package com.gisquest.plan.service.service.search;
 
+import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.QuataDataVo;
 import com.gisquest.plan.service.vo.quata.QuataSearchVo;
 import com.gisquest.plan.service.vo.quata.QuataVo;
@@ -15,11 +16,11 @@ import java.util.List;
 public interface SearchService {
     List<String> searchTopics();
 
-    List<QuataVo> fuzzySearch(String searchContent);
+    ResponseResult fuzzySearch(String searchContent);
 
-    List<QuataDataVo> searchByTopic(String topic);
+    ResponseResult searchByTopic(String topic);
 
-    List<String> searchCondition(List<String> quataIdList, String fieldName);
+    ResponseResult searchCondition(List<String> quataIdList, String fieldName);
 
     List<QuataDataVo> searchQuataDetail(List<QuataSearchVo> quataSearchVoList);
 }
