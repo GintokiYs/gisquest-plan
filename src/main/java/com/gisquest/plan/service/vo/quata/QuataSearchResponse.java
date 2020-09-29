@@ -10,7 +10,15 @@ import java.util.List;
 public class QuataSearchResponse implements Serializable {
     private static final long serialVersionUID = -4766596043438459940L;
 
-    private List<String> quataIdList;
+    private List<String> quataIdList;  //指标id
+
+    private List<String> yearList;
+
+    private List<String> areaList;
+
+    private List<String> collectList;
+
+    private List<String> dataSourcetList;
 
     private String tableName;
     //年份
@@ -108,5 +116,37 @@ public class QuataSearchResponse implements Serializable {
 
     public void setQuataIdList(List<String> quataIdList) {
         this.quataIdList = quataIdList;
+    }
+
+    public List<String> getYearList() {
+        return yearList;
+    }
+
+    public void setYearList(List<String> yearList) {
+        this.yearList = yearList;
+    }
+
+    public List<String> getAreaList() {
+        return areaList;
+    }
+
+    public void setAreaList(List<String> areaList) {
+        this.areaList = areaList;
+    }
+
+    public List<String> getCollectList() {
+        return collectList;
+    }
+
+    public void setCollectList(List<String> collectList) {
+        this.collectList = collectList;
+    }
+
+    public List<String> getDataSourcetList() {
+        return dataSourcetList;
+    }
+
+    public void setDataSourcetList(List<String> dataSourcetList) {
+        this.dataSourcetList = dataSourcetList;
     }
 }
