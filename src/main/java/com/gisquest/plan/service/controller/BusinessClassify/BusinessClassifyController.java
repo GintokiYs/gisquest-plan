@@ -20,11 +20,11 @@ public class BusinessClassifyController {
     @Autowired
     BusinessClassifyService businessClassifyService;
 
-    @ApiOperation("根据主题id获取二级和三级指标")
+    /*@ApiOperation("根据主题id获取二级和三级指标")
     @GetMapping("/getTargetById")
     public ResponseResult getTargetById(String resourceParentid) {
         return ResponseResult.ok(businessClassifyService.getTargetById(resourceParentid));
-    }
+    }*/
 
     @ApiOperation("查询指标列表")
     @PostMapping("/getTargetList")

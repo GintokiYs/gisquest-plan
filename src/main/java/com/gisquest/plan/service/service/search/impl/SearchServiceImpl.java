@@ -33,6 +33,9 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public ResponseResult fuzzySearch(String searchContent) {
+        if (searchContent == null || "".equals(searchContent)) {
+            searchContent = "%";
+        }
         List<QuataVo> quataList = searchMapper.fuzzySearch("%" + searchContent + "%");
         for (QuataVo quataVo : quataList) {
             //tableName 填充完整表名

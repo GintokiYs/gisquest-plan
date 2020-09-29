@@ -27,18 +27,18 @@ public class SearchController {
     private SearchService searchService;
 
 
-    @ApiOperation("查询所有可选主题")
+    /*@ApiOperation("查询所有可选主题")
     @GetMapping("/topics")
     public ResponseResult searchTopics() {
         List<String> topicList = searchService.searchTopics();
         ResponseResult<List<String>> ok = ResponseResult.ok();
         ok.setData(topicList);
         return ok;
-    }
+    }*/
 
     @ApiOperation("根据输入框内容搜索符合模糊匹配规则的指标")
     @GetMapping("/fuzzy")
-    public ResponseResult fuzzySearch(@RequestParam String searchContent) {
+    public ResponseResult fuzzySearch(@RequestParam(required = false) String searchContent) {
         return searchService.fuzzySearch(searchContent);
     }
 
@@ -55,12 +55,12 @@ public class SearchController {
         return searchService.searchCondition(quataIdList, fieldName);
     }
 
-    @ApiOperation("根据选择的指标列表，年份，区域等条件查询指标明细")
+    /*@ApiOperation("根据选择的指标列表，年份，区域等条件查询指标明细")
     @GetMapping("/searchQuataDetail")
     public ResponseResult searchQuataDetail(@RequestParam("quataSearchVo") List<QuataSearchVo> quataSearchVoList) {
         List<QuataDataVo> quataDataVoList = searchService.searchQuataDetail(quataSearchVoList);
         ResponseResult<List<QuataDataVo>> ok = ResponseResult.ok();
         ok.setData(quataDataVoList);
         return ok;
-    }
+    }*/
 }
