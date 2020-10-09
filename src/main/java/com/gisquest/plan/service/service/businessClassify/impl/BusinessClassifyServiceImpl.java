@@ -311,7 +311,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         }
 
         Map<String, Object> hashMap = new HashMap();
-        hashMap.put("tipoc", responses);
+        hashMap.put("topic", responses);
         hashMap.put("avg",avgList);
         hashMap.put("median",medianList);
         return hashMap;

@@ -1,5 +1,5 @@
 
-#springÏà¹ØÅäÖÃ
+#springï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 spring:
   datasource:
     url: jdbc:postgresql://192.168.9.86:5432/szzk
@@ -19,7 +19,8 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
-
+server:
+  port: 8170
 
 mybatis:
   mapper-locations: classpath:mappers/*.xml

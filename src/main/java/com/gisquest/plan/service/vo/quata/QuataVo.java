@@ -13,8 +13,10 @@ public class QuataVo {
     private String topic;
     //一级指标
     private String firstQuata;
+
+    private String firstQuataId;
     //二级指标
-    private String secondQuata;
+    private String name;
     //表名
     private String tableName;
 
@@ -42,12 +44,12 @@ public class QuataVo {
         this.firstQuata = firstQuata;
     }
 
-    public String getSecondQuata() {
-        return secondQuata;
+    public String getName() {
+        return name;
     }
 
-    public void setSecondQuata(String secondQuata) {
-        this.secondQuata = secondQuata;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getTableName() {
@@ -56,5 +58,13 @@ public class QuataVo {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getFirstQuataId() {
+        return firstQuataId;
+    }
+
+    public void setFirstQuataId(String firstQuataId) {
+        this.firstQuataId = firstQuataId;
     }
 }

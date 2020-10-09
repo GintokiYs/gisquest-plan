@@ -5,7 +5,8 @@
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="topic" property="topic" jdbcType="VARCHAR" />
     <result column="first_quata" property="firstQuata" jdbcType="VARCHAR" />
-    <result column="second_quata" property="secondQuata" jdbcType="VARCHAR" />
+    <result column="first_quata_id" property="firstQuataId" jdbcType="VARCHAR" />
+    <result column="second_quata" property="name" jdbcType="VARCHAR" />
     <result column="alias" property="tableName" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="BaseResultMap" type="com.gisquest.plan.service.vo.quata.QuataResponse">
@@ -26,7 +27,7 @@
 
   <select id="searchByTopicId" parameterType="java.lang.String" resultMap="QuataVoMap">
     select
-    t1.id id,t3."type" topic,t2.type first_quata,t1.type second_quata,t1.alias alias
+    t1.id id,t3."type" topic,t2.type first_quata,t1.type second_quata,t1.alias alias,t2.id first_quata_id
     from target_classify t1 join business_classify t2 on t1.business_parentid = t2.id
     join resource_classify t3 on t2.resource_parentid = t3.id
     where t3.id = #{topic,jdbcType=VARCHAR};
@@ -63,16 +64,16 @@
     </trim>
   </select>
 
-    <select id="getTargetYear" parameterType="java.lang.String" resultType="java.lang.String">
+  <select id="getTargetYear" parameterType="java.lang.String" resultType="java.lang.String">
         select  DISTINCT year
           from ${tableName}
     </select>
 
-    <select id="getTargetAvg"  resultType="java.lang.Integer">
+  <select id="getTargetAvg"  resultType="java.lang.Integer">
         select AVG(cast(bc.target as float8)) FROM (SELECT * from ${tableName} where area_code !='330000' and year =${year}) bc
     </select>
 
-    <select id="getTargetMedian"  resultMap="BaseResultMap">
+  <select id="getTargetMedian"  resultMap="BaseResultMap">
         SELECT * from ${tableName} where area_code !='330000' and year =${year}
     </select>
 

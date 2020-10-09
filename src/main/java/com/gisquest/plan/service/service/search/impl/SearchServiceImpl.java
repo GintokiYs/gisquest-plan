@@ -4,16 +4,15 @@ import com.gisquest.plan.service.dao.SearchMapper;
 import com.gisquest.plan.service.service.search.SearchService;
 import com.gisquest.plan.service.utils.TransformUtil;
 import com.gisquest.plan.service.vo.ResponseResult;
+import com.gisquest.plan.service.vo.quata.QuataByTopicVo;
 import com.gisquest.plan.service.vo.quata.QuataDataVo;
 import com.gisquest.plan.service.vo.quata.QuataSearchVo;
 import com.gisquest.plan.service.vo.quata.QuataVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ：yeyh
@@ -53,8 +52,13 @@ public class SearchServiceImpl implements SearchService {
             //tableName 填充完整表名
             quataVo.setTableName("t" + TransformUtil.frontCompWithZore(quataVo.getTableName(), 6));
         }
-        ResponseResult<List<QuataVo>> ok = ResponseResult.ok();
-        ok.setData(quataList);
+        ResponseResult<List<QuataByTopicVo>> ok = ResponseResult.ok();
+        ArrayList<QuataByTopicVo> list = new ArrayList<>();
+        Map<String, List<QuataVo>> collect = quataList.stream().collect(Collectors.groupingBy(QuataVo::getFirstQuataId));
+        for (Map.Entry<String, List<QuataVo>> entry : collect.entrySet()) {
+            list.add(new QuataByTopicVo(entry.getKey(), entry.getValue().get(0).getFirstQuata(), entry.getValue()));
+        }
+        ok.setData(list);
         return ok;
     }
 
