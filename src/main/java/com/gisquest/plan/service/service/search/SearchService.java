@@ -23,4 +23,10 @@ public interface SearchService {
     ResponseResult searchCondition(List<String> quataIdList, String fieldName);
 
     List<QuataDataVo> searchQuataDetail(List<QuataSearchVo> quataSearchVoList);
+
+     ResponseResult searchCoding();
+
+    ResponseResult codingFixedSearch(int type);
+
+    ResponseResult neighboringSearch(String code);
 }

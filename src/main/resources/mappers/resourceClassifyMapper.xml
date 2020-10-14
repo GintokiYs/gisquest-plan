@@ -8,7 +8,7 @@
 
 
   <select id="getAllTopic" resultMap="BaseResultMap">
-    select * from resource_classify where parentid = '2'
+    select * from resource_classify where parentid = '2' ORDER BY cast(id as int) ;
   </select>
 
 

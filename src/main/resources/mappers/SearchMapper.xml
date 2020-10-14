@@ -16,10 +16,20 @@
     <result column="source_year" property="sourceYear" jdbcType="VARCHAR" />
     <result column="target" property="target" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="CodingMap" type="com.gisquest.plan.service.vo.CodingPo">
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="xzqbh" property="xzqbh" jdbcType="VARCHAR" />
+    <result column="codeType" property="codeType" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="GeoCodingMap" type="com.gisquest.plan.service.vo.CodingPo">
+    <result column="xzqmc" property="name" jdbcType="VARCHAR" />
+    <result column="xzqdm" property="xzqbh" jdbcType="VARCHAR" />
+  </resultMap>
+
 
   <select id="fuzzySearch" parameterType="java.lang.String" resultMap="QuataVoMap">
     select
-    t1.id id,t3."type" topic,t2.type first_quata,t1.type second_quata,t1.alias alias
+    t1.id id,t3."type" topic,t2.type first_quata,t2.id first_quata_id,t1.type second_quata,t1.alias alias
     from target_classify t1 join business_classify t2 on t1.business_parentid = t2.id
     join resource_classify t3 on t2.resource_parentid = t3.id
     where t1.type like #{searchContent,jdbcType=VARCHAR};
@@ -53,7 +63,7 @@
         and year = #{quataSearchResponse.year}
       </if>
       <if test="quataSearchResponse.area !=null and quataSearchResponse.area != ''">
-        and area = #{quataSearchResponse.area}
+        and area_code = #{quataSearchResponse.area}
       </if>
       <if test="quataSearchResponse.dataSource !=null and quataSearchResponse.dataSource != ''">
         and source = #{quataSearchResponse.dataSource}
@@ -76,5 +86,17 @@
   <select id="getTargetMedian"  resultMap="BaseResultMap">
         SELECT * from ${tableName} where area_code !='330000' and year =${year}
     </select>
+
+  <select id="searchCoding"  resultMap="CodingMap">
+        SELECT *,case when xzqbh like '__0000' then 1 when xzqbh like '____00' then 2 else 3 end codeType FROM district_ ORDER BY xzqbh DESC
+  </select>
+
+  <select id="codingFixedSearch"  resultMap="CodingMap">
+        SELECT * FROM district_ where xzqbh in (${searchCondition});
+  </select>
+
+  <select id="neighboringSearch"  resultType="java.lang.String">
+      select xzqdm from public.zjxj where St_touches(geom,(SELECT geom FROM public.zjxj where xzqdm = #{code,jdbcType=VARCHAR} ));
+  </select>
 
 </mapper>

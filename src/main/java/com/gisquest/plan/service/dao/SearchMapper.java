@@ -1,5 +1,7 @@
 package com.gisquest.plan.service.dao;
 
+import com.gisquest.plan.service.vo.Coding;
+import com.gisquest.plan.service.vo.CodingPo;
 import com.gisquest.plan.service.vo.quata.QuataDataVo;
 import com.gisquest.plan.service.vo.quata.QuataResponse;
 import com.gisquest.plan.service.vo.quata.QuataSearchResponse;
@@ -33,4 +35,9 @@ public interface SearchMapper {
 
     List<QuataResponse> getTargetMedian(@Param("tableName") String tableName,@Param("year") int year);
 
+    List<CodingPo> searchCoding();
+
+    List<CodingPo> codingFixedSearch(String searchCondition);
+
+    List<String> neighboringSearch(String code);
 }

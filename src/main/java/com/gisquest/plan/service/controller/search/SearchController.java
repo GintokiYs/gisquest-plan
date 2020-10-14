@@ -55,6 +55,11 @@ public class SearchController {
         return searchService.searchCondition(quataIdList, fieldName);
     }
 
+    @ApiOperation("返回省市区编码")
+    @GetMapping("/coding")
+    public ResponseResult searchCoding() {
+        return searchService.searchCoding();
+    }
     /*@ApiOperation("根据选择的指标列表，年份，区域等条件查询指标明细")
     @GetMapping("/searchQuataDetail")
     public ResponseResult searchQuataDetail(@RequestParam("quataSearchVo") List<QuataSearchVo> quataSearchVoList) {
@@ -63,4 +68,16 @@ public class SearchController {
         ok.setData(quataDataVoList);
         return ok;
     }*/
+
+    @ApiOperation("返回26个浙江省加快发展县及17个工业强县")
+    @GetMapping("/codingFixedSearch")
+    public ResponseResult codingFixedSearch(@RequestParam("type") int type) {
+        return searchService.codingFixedSearch(type);
+    }
+
+    @ApiOperation("临县编号查询")
+    @GetMapping("/neighboringSearch")
+    public ResponseResult neighboringSearch(@RequestParam("code") String code) {
+        return searchService.neighboringSearch(code);
+    }
 }
