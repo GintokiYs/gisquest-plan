@@ -1,7 +1,6 @@
 package com.gisquest.plan.service.service.businessClassify.impl;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.text.UnicodeUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.gisquest.plan.service.dao.BusinessClassifyMapper;
@@ -19,8 +18,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
