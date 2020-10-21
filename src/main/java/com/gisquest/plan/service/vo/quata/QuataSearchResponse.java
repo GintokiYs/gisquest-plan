@@ -10,25 +10,17 @@ import java.util.List;
 public class QuataSearchResponse implements Serializable {
     private static final long serialVersionUID = -4766596043438459940L;
 
-    private List<String> quataIdList;  //指标id
+    private String quataId;  //指标id
 
     private List<String> yearList;
 
     private List<String> areaList;
-
-    private List<String> collectList;
-
-    private List<String> dataSourcetList;
 
     private String tableName;
     //年份
     private int year;
     //区域
     private String area;
-    //数据来源
-    private String dataSource;
-    //数据收集年份
-    private int collectYear;
     //省级指标
     private String provinceCode;
     //国家指标
@@ -37,6 +29,14 @@ public class QuataSearchResponse implements Serializable {
     private String median; //中位线
 
     private String ave; // 平均值
+
+    private String yearString;
+
+    private String areaString;
+
+    private String equally; //是否同源true or false
+
+    private String areaSoure; //指标来源 0为国家，1为省，2为市，3为区县
 
     public String getTableName() {
         return tableName;
@@ -60,22 +60,6 @@ public class QuataSearchResponse implements Serializable {
 
     public void setArea(String area) {
         this.area = area;
-    }
-
-    public String getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(String dataSource) {
-        this.dataSource = dataSource;
-    }
-
-    public int getCollectYear() {
-        return collectYear;
-    }
-
-    public void setCollectYear(int collectYear) {
-        this.collectYear = collectYear;
     }
 
     public String getProvinceCode() {
@@ -110,12 +94,12 @@ public class QuataSearchResponse implements Serializable {
         this.ave = ave;
     }
 
-    public List<String> getQuataIdList() {
-        return quataIdList;
+    public String getQuataId() {
+        return quataId;
     }
 
-    public void setQuataIdList(List<String> quataIdList) {
-        this.quataIdList = quataIdList;
+    public void setQuataId(String quataId) {
+        this.quataId = quataId;
     }
 
     public List<String> getYearList() {
@@ -134,19 +118,35 @@ public class QuataSearchResponse implements Serializable {
         this.areaList = areaList;
     }
 
-    public List<String> getCollectList() {
-        return collectList;
+    public String getYearString() {
+        return yearString;
     }
 
-    public void setCollectList(List<String> collectList) {
-        this.collectList = collectList;
+    public void setYearString(String yearString) {
+        this.yearString = yearString;
     }
 
-    public List<String> getDataSourcetList() {
-        return dataSourcetList;
+    public String getAreaString() {
+        return areaString;
     }
 
-    public void setDataSourcetList(List<String> dataSourcetList) {
-        this.dataSourcetList = dataSourcetList;
+    public void setAreaString(String areaString) {
+        this.areaString = areaString;
+    }
+
+    public String getEqually() {
+        return equally;
+    }
+
+    public void setEqually(String equally) {
+        this.equally = equally;
+    }
+
+    public String getAreaSoure() {
+        return areaSoure;
+    }
+
+    public void setAreaSoure(String areaSoure) {
+        this.areaSoure = areaSoure;
     }
 }

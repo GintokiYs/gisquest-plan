@@ -13,6 +13,7 @@ import com.gisquest.plan.service.service.businessClassify.BusinessClassifyServic
 import com.gisquest.plan.service.utils.TransformUtil;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -52,233 +53,41 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
 
     @Override
     public Map<String, Object> getTargetList(QuataSearchResponse quataSearchResponse) {
-        List<String> list = quataSearchResponse.getQuataIdList();
-        List<String> year = quataSearchResponse.getYearList();
-        List<String> areaList = quataSearchResponse.getAreaList();
-        List<String> collectList = quataSearchResponse.getCollectList();
-        List<String> dataSourcetList = quataSearchResponse.getDataSourcetList();
+
         List<QuataResponse> responses = new ArrayList<>();
         List<QuataResponse> avgList = new ArrayList<>();
         List<QuataResponse> medianList = new ArrayList<>();
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                TargetClassify targetClassify = targetClassifyMapper.getTable(list.get(i));
+
+        TargetClassify targetClassify = targetClassifyMapper.getTable(quataSearchResponse.getQuataId());
+        if(!StringUtils.isEmpty(quataSearchResponse.getAreaSoure())){ //初始化
+            if(quataSearchResponse.getEqually().equals("true")){ //同源
+
                 String tableName = "t" + TransformUtil.frontCompWithZore(targetClassify.getAlias(), 6);
-                if (year.size() == 0 && areaList.size() == 0 && collectList.size() == 0 && dataSourcetList.size() == 0) {
-                    quataSearchResponse.setTableName(tableName);
-                    List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                    for (int j = 0; j < list1.size(); j++) {
-                        list1.get(j).setTrage(targetClassify.getType());
-                    }
-                    responses.addAll(list1);
-                } else if (year.size() > 0 && areaList.size() == 0 && collectList.size() == 0 && dataSourcetList.size() == 0) {
-                    for (int m = 0; m < year.size(); m++) {
-                        quataSearchResponse.setTableName(tableName);
-                        quataSearchResponse.setYear(Integer.parseInt(year.get(m)));
-                        List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                        for (int j = 0; j < list1.size(); j++) {
-                            list1.get(j).setTrage(targetClassify.getType());
-                        }
-                        responses.addAll(list1);
-                    }
-                } else if (areaList.size() > 0 && year.size() == 0 && collectList.size() == 0 && dataSourcetList.size() == 0) {
-                    for (int m = 0; m < areaList.size(); m++) {
-                        quataSearchResponse.setTableName(tableName);
-                        quataSearchResponse.setArea(areaList.get(m));
-                        List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                        for (int j = 0; j < list1.size(); j++) {
-                            list1.get(j).setTrage(targetClassify.getType());
-                        }
-                        responses.addAll(list1);
-                    }
-                } else if (collectList.size() > 0 && areaList.size() == 0 && year.size() == 0 && dataSourcetList.size() == 0) {
-                    for (int m = 0; m < collectList.size(); m++) {
-                        quataSearchResponse.setTableName(tableName);
-                        quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(m)));
-                        List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                        for (int j = 0; j < list1.size(); j++) {
-                            list1.get(j).setTrage(targetClassify.getType());
-                        }
-                        responses.addAll(list1);
-                    }
-                } else if (collectList.size() == 0 && areaList.size() == 0 && year.size() == 0 && dataSourcetList.size() >= 0) {
-                    for (int m = 0; m < dataSourcetList.size(); m++) {
-                        quataSearchResponse.setTableName(tableName);
-                        quataSearchResponse.setDataSource(dataSourcetList.get(m));
-                        List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                        for (int j = 0; j < list1.size(); j++) {
-                            list1.get(j).setTrage(targetClassify.getType());
-                        }
-                        responses.addAll(list1);
-                    }
-                } else if (year.size() > 0 && areaList.size() > 0 && collectList.size() == 0 && dataSourcetList.size() == 0) {
-                    for (int m = 0; m < areaList.size(); m++) {
-                        for (int n = 0; n < year.size(); n++) {
-                            quataSearchResponse.setTableName(tableName);
-                            quataSearchResponse.setArea(areaList.get(m));
-                            quataSearchResponse.setYear(Integer.parseInt(year.get(n)));
-                            List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                            for (int j = 0; j < list1.size(); j++) {
-                                list1.get(j).setTrage(targetClassify.getType());
-                            }
-                            responses.addAll(list1);
-                        }
-                    }
-                } else if (year.size() > 0 && areaList.size() == 0 && collectList.size() > 0 && dataSourcetList.size() == 0) {
-                    for (int m = 0; m < collectList.size(); m++) {
-                        for (int n = 0; n < year.size(); n++) {
-                            quataSearchResponse.setTableName(tableName);
-                            quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(m)));
-                            quataSearchResponse.setYear(Integer.parseInt(year.get(n)));
-                            List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                            for (int j = 0; j < list1.size(); j++) {
-                                list1.get(j).setTrage(targetClassify.getType());
-                            }
-                            responses.addAll(list1);
-                        }
-                    }
-                } else if (year.size() == 0 && areaList.size() > 0 && collectList.size() > 0 && dataSourcetList.size() == 0) {
-                    for (int m = 0; m < areaList.size(); m++) {
-                        for (int n = 0; n < collectList.size(); n++) {
-                            quataSearchResponse.setTableName(tableName);
-                            quataSearchResponse.setArea(areaList.get(m));
-                            quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(n)));
-                            List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                            for (int j = 0; j < list1.size(); j++) {
-                                list1.get(j).setTrage(targetClassify.getType());
-                            }
-                            responses.addAll(list1);
-                        }
-                    }
-                } else if (year.size() > 0 && areaList.size() == 0 && collectList.size() == 0 && dataSourcetList.size() > 0) {
-                    for (int m = 0; m < dataSourcetList.size(); m++) {
-                        for (int n = 0; n < year.size(); n++) {
-                            quataSearchResponse.setTableName(tableName);
-                            quataSearchResponse.setDataSource(dataSourcetList.get(m));
-                            quataSearchResponse.setYear(Integer.parseInt(year.get(n)));
-                            List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                            for (int j = 0; j < list1.size(); j++) {
-                                list1.get(j).setTrage(targetClassify.getType());
-                            }
-                            responses.addAll(list1);
-                        }
-                    }
-                } else if (year.size() == 0 && areaList.size() > 0 && collectList.size() == 0 && dataSourcetList.size() > 0) {
-                    for (int m = 0; m < dataSourcetList.size(); m++) {
-                        for (int n = 0; n < areaList.size(); n++) {
-                            quataSearchResponse.setTableName(tableName);
-                            quataSearchResponse.setDataSource(dataSourcetList.get(m));
-                            quataSearchResponse.setArea(areaList.get(n));
-                            List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                            for (int j = 0; j < list1.size(); j++) {
-                                list1.get(j).setTrage(targetClassify.getType());
-                            }
-                            responses.addAll(list1);
-                        }
-                    }
-                } else if (year.size() == 0 && areaList.size() == 0 && collectList.size() > 0 && dataSourcetList.size() > 0) {
-                    for (int m = 0; m < dataSourcetList.size(); m++) {
-                        for (int n = 0; n < collectList.size(); n++) {
-                            quataSearchResponse.setTableName(tableName);
-                            quataSearchResponse.setDataSource(dataSourcetList.get(m));
-                            quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(n)));
-                            List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                            for (int j = 0; j < list1.size(); j++) {
-                                list1.get(j).setTrage(targetClassify.getType());
-                            }
-                            responses.addAll(list1);
-                        }
-                    }
-                } else if (year.size() > 0 && areaList.size() > 0 && collectList.size() > 0 && dataSourcetList.size() == 0) {
-                    for (int m = 0; m < areaList.size(); m++) {
-                        for (int n = 0; n < collectList.size(); n++) {
-                            for (int q = 0; q < year.size(); q++) {
-                                quataSearchResponse.setTableName(tableName);
-                                quataSearchResponse.setArea(areaList.get(m));
-                                quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(n)));
-                                quataSearchResponse.setYear(Integer.parseInt(year.get(q)));
-                                List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                                for (int j = 0; j < list1.size(); j++) {
-                                    list1.get(j).setTrage(targetClassify.getType());
-                                }
-                                responses.addAll(list1);
-                            }
-
-                        }
-                    }
-                } else if (year.size() == 0 && areaList.size() > 0 && collectList.size() > 0 && dataSourcetList.size() > 0) {
-                    for (int m = 0; m < areaList.size(); m++) {
-                        for (int n = 0; n < collectList.size(); n++) {
-                            for (int q = 0; q < dataSourcetList.size(); q++) {
-                                quataSearchResponse.setTableName(tableName);
-                                quataSearchResponse.setArea(areaList.get(m));
-                                quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(n)));
-                                quataSearchResponse.setDataSource(dataSourcetList.get(q));
-                                List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                                for (int j = 0; j < list1.size(); j++) {
-                                    list1.get(j).setTrage(targetClassify.getType());
-                                }
-                                responses.addAll(list1);
-                            }
-
-                        }
-                    }
-                } else if (year.size() > 0 && areaList.size() == 0 && collectList.size() > 0 && dataSourcetList.size() > 0) {
-                    for (int m = 0; m < year.size(); m++) {
-                        for (int n = 0; n < collectList.size(); n++) {
-                            for (int q = 0; q < dataSourcetList.size(); q++) {
-                                quataSearchResponse.setTableName(tableName);
-                                quataSearchResponse.setYear(Integer.parseInt(year.get(m)));
-                                quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(n)));
-                                quataSearchResponse.setDataSource(dataSourcetList.get(q));
-                                List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                                for (int j = 0; j < list1.size(); j++) {
-                                    list1.get(j).setTrage(targetClassify.getType());
-                                }
-                                responses.addAll(list1);
-                            }
-
-                        }
-                    }
-                } else if (year.size() > 0 && areaList.size() > 0 && collectList.size() == 0 && dataSourcetList.size() > 0) {
-                    for (int m = 0; m < year.size(); m++) {
-                        for (int n = 0; n < areaList.size(); n++) {
-                            for (int q = 0; q < dataSourcetList.size(); q++) {
-                                quataSearchResponse.setTableName(tableName);
-                                quataSearchResponse.setYear(Integer.parseInt(year.get(m)));
-                                quataSearchResponse.setArea(areaList.get(n));
-                                quataSearchResponse.setDataSource(dataSourcetList.get(q));
-                                List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                                for (int j = 0; j < list1.size(); j++) {
-                                    list1.get(j).setTrage(targetClassify.getType());
-                                }
-                                responses.addAll(list1);
-                            }
-
-                        }
-                    }
-                } else if (year.size() > 0 && areaList.size() > 0 && collectList.size() > 0 && dataSourcetList.size() > 0) {
-                    for (int m = 0; m < year.size(); m++) {
-                        for (int n = 0; n < areaList.size(); n++) {
-                            for (int q = 0; q < dataSourcetList.size(); q++) {
-                                for (int p = 0; p < collectList.size(); p++) {
-                                    quataSearchResponse.setTableName(tableName);
-                                    quataSearchResponse.setYear(Integer.parseInt(year.get(m)));
-                                    quataSearchResponse.setArea(areaList.get(n));
-                                    quataSearchResponse.setDataSource(dataSourcetList.get(q));
-                                    quataSearchResponse.setCollectYear(Integer.parseInt(collectList.get(p)));
-                                    List<QuataResponse> list1 = searchMapper.getTargetList(quataSearchResponse);
-                                    for (int j = 0; j < list1.size(); j++) {
-                                        list1.get(j).setTrage(targetClassify.getType());
-                                    }
-                                    responses.addAll(list1);
-                                }
-
-                            }
-
-                        }
+                quataSearchResponse.setTableName(tableName);
+                StringBuilder sb = new StringBuilder();
+                for (int j = 0; j < quataSearchResponse.getYearList().size(); j++) {
+                    if (j == quataSearchResponse.getYearList().size()-1){
+                        sb.append(quataSearchResponse.getYearList().get(j));
+                    }else {
+                        sb.append(quataSearchResponse.getYearList().get(j));
+                        sb.append(",");
                     }
                 }
+                StringBuilder sb1 = new StringBuilder();
+                for (int k = 0; k < quataSearchResponse.getAreaList().size(); k++) {
+                    if (k == quataSearchResponse.getAreaList().size()-1){
+                        sb1.append(quataSearchResponse.getAreaList().get(k));
+                    }else {
+                        sb1.append(quataSearchResponse.getAreaList().get(k));
+                        sb1.append(",");
+                    }
+                }
+                quataSearchResponse.setYearString(sb.toString());
+                quataSearchResponse.setAreaString(sb1.toString());
+
+
+                List<QuataResponse> list1= searchMapper.getTargetList(quataSearchResponse);
+                responses.addAll(list1);
 
 
                 List<String> listYear = searchMapper.getTargetYear(tableName);
@@ -318,13 +127,42 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
                         }
                     }
                 }
+
+            }else {
+
             }
+
+        }else {
+            String tableName = "t" + TransformUtil.frontCompWithZore(targetClassify.getAlias(), 6);
+            quataSearchResponse.setTableName(tableName);
+            quataSearchResponse.setAreaSoure("0");
+            List<QuataResponse> list1= searchMapper.getTargetList(quataSearchResponse);
+            if(list1.size() ==0){
+                quataSearchResponse.setAreaSoure("1");
+                list1 = searchMapper.getTargetList(quataSearchResponse);
+                if(list1.size() ==0){
+                    quataSearchResponse.setAreaSoure("2");
+                    list1 = searchMapper.getTargetList(quataSearchResponse);
+                    if(list1.size() ==0){
+                        quataSearchResponse.setAreaSoure("3");
+                        list1 = searchMapper.getTargetList(quataSearchResponse);
+                    }
+                }
+
+            }
+            responses.addAll(list1);
+
         }
+
+
+
+
 
         Map<String, Object> hashMap = new HashMap();
         hashMap.put("topic", responses);
         hashMap.put("avg", avgList);
         hashMap.put("median", medianList);
+        hashMap.put("source", quataSearchResponse.getAreaSoure());
         return hashMap;
     }
 

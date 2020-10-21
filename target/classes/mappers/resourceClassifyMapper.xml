@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gisquest.plan.service.dao.ResourceClassifyMapper" >
+  <resultMap id="BaseResultMap" type="com.gisquest.plan.service.vo.quata.QuataVo" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="type" property="topic" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <select id="getAllTopic" resultMap="BaseResultMap">
+    select * from resource_classify where parentid = '2' ORDER BY cast(id as int) ;
+  </select>
+
+
+
+
+</mapper>
