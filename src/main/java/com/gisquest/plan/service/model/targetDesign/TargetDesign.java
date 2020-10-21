@@ -23,6 +23,16 @@ public class TargetDesign {
 
     private String extend3;
 
+    private String targetDesignParentId;
+
+    public String getTargetDesignParentId() {
+        return targetDesignParentId;
+    }
+
+    public void setTargetDesignParentId(String targetDesignParentId) {
+        this.targetDesignParentId = targetDesignParentId;
+    }
+
     public String getId() {
         return id;
     }

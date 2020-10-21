@@ -13,10 +13,11 @@
     <result column="extend1" property="extend1" jdbcType="VARCHAR" />
     <result column="extend2" property="extend2" jdbcType="VARCHAR" />
     <result column="extend3" property="extend3" jdbcType="VARCHAR" />
+    <result column="target_design_parent_id" property="targetDesignParentId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, parentid, area, type, alias, target_parentid, column_name, column_data, extend1, 
-    extend2, extend3
+    extend2, extend3, target_design_parent_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -32,11 +33,13 @@
     insert into target_design (id, parentid, area, 
       type, alias, target_parentid, 
       column_name, column_data, extend1, 
-      extend2, extend3)
+      extend2, extend3, target_design_parent_id
+      )
     values (#{id,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
       #{type,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, #{targetParentid,jdbcType=VARCHAR}, 
       #{columnName,jdbcType=VARCHAR}, #{columnData,jdbcType=VARCHAR}, #{extend1,jdbcType=VARCHAR}, 
-      #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR})
+      #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR}, #{targetDesignParentId,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.gisquest.plan.service.model.targetDesign.TargetDesign" >
     insert into target_design
@@ -74,6 +77,9 @@
       <if test="extend3 != null" >
         extend3,
       </if>
+      <if test="targetDesignParentId != null" >
+        target_design_parent_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -108,6 +114,9 @@
       </if>
       <if test="extend3 != null" >
         #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="targetDesignParentId != null" >
+        #{targetDesignParentId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -144,6 +153,9 @@
       <if test="extend3 != null" >
         extend3 = #{extend3,jdbcType=VARCHAR},
       </if>
+      <if test="targetDesignParentId != null" >
+        target_design_parent_id = #{targetDesignParentId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -158,7 +170,8 @@
       column_data = #{columnData,jdbcType=VARCHAR},
       extend1 = #{extend1,jdbcType=VARCHAR},
       extend2 = #{extend2,jdbcType=VARCHAR},
-      extend3 = #{extend3,jdbcType=VARCHAR}
+      extend3 = #{extend3,jdbcType=VARCHAR},
+      target_design_parent_id = #{targetDesignParentId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
