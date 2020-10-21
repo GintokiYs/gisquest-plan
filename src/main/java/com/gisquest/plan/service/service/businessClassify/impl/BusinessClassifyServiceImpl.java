@@ -4,8 +4,10 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.gisquest.plan.service.dao.BusinessClassifyMapper;
+import com.gisquest.plan.service.dao.DistrictMapper;
 import com.gisquest.plan.service.dao.SearchMapper;
 import com.gisquest.plan.service.dao.TargetClassifyMapper;
+import com.gisquest.plan.service.model.District.District;
 import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import com.gisquest.plan.service.service.businessClassify.BusinessClassifyService;
 import com.gisquest.plan.service.utils.TransformUtil;
@@ -37,6 +39,8 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
 
     @Autowired
     SearchMapper searchMapper;
+    @Autowired
+    DistrictMapper districtMapper;
 
     @Autowired
     TargetClassifyMapper targetClassifyMapper;
@@ -369,5 +373,16 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         //关闭输出Servlet流
         IoUtil.close(out);
         return ResponseResult.ok();
+    }
+    /**
+     * @Author
+     * @Description //指标表设计区域数据获取
+     * @Date 2020/10/21 15:43
+     * @Param []
+     * @return java.util.List<com.gisquest.plan.service.model.District.District>
+     **/
+    @Override
+    public List<District> getAreaList() {
+        return districtMapper.selectAll();
     }
 }

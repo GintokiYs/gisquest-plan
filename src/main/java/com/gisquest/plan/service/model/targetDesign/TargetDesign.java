@@ -1,5 +1,11 @@
 package com.gisquest.plan.service.model.targetDesign;
-
+/**
+ * @Author 指标设计器关联数据
+ * @Description //TODO
+ * @Date 2020/10/21 13:12
+ * @Param
+ * @return
+ **/
 public class TargetDesign {
     private String id;
 

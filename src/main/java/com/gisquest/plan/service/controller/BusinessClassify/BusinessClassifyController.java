@@ -8,6 +8,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.midi.Soundbank;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author honght
  * @date 2020/9/28 10:31
@@ -37,4 +41,10 @@ public class BusinessClassifyController {
     public ResponseResult downloadTargetList(@RequestBody QuataSearchResponse quataSearchResponse) {
         return businessClassifyService.downloadTargetList(quataSearchResponse);
     }
+    @ApiOperation("指标表设计区域数据获取")
+    @GetMapping("/getAreaList")
+    public ResponseResult getAreaList() {
+        return ResponseResult.ok(businessClassifyService.getAreaList());
+    }
+
 }

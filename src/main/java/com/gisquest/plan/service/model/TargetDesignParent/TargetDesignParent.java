@@ -1,5 +1,11 @@
 package com.gisquest.plan.service.model.TargetDesignParent;
-
+/**
+ * @Author
+ * @Description //指标设计器实体类
+ * @Date 2020/10/21 13:11
+ * @Param
+ * @return
+ **/
 public class TargetDesignParent {
     private String id;
 

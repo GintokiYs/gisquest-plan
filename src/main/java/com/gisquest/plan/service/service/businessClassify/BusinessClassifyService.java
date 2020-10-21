@@ -1,5 +1,6 @@
 package com.gisquest.plan.service.service.businessClassify;
 
+import com.gisquest.plan.service.model.District.District;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
 
@@ -17,4 +18,7 @@ public interface BusinessClassifyService {
     Map<String, Object> getTargetList(QuataSearchResponse quataSearchResponse);
 
     ResponseResult downloadTargetList(QuataSearchResponse quataSearchResponse);
+
+    List<District> getAreaList();
+
 }
