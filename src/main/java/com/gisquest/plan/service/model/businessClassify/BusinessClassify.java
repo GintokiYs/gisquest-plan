@@ -1,6 +1,6 @@
 package com.gisquest.plan.service.model.businessClassify;
 
-public class businessClassify {
+public class BusinessClassify {
     private String id;
 
     private String type;

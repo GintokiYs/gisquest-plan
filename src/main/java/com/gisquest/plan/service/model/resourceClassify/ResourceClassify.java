@@ -1,6 +1,6 @@
 package com.gisquest.plan.service.model.resourceClassify;
 
-public class resourceClassify {
+public class ResourceClassify {
     private String id;
 
     private String type;
