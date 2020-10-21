@@ -9,6 +9,7 @@ import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
 import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import com.gisquest.plan.service.service.businessClassify.BusinessClassifyService;
 import com.gisquest.plan.service.utils.TransformUtil;
+import com.gisquest.plan.service.utils.UUIDUtils;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -400,6 +401,9 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
 
         return tree;
     }
+
+
+
     public static List<Map<String, Object>> getTree(List<TargetDesignParent> list) {
         List<Map<String, Object>> firstNodeList = new ArrayList<Map<String, Object>>();
         List<TargetDesignParent> removeList = new ArrayList<TargetDesignParent>();
@@ -442,5 +446,20 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         }
         return nodeList;
     }
-
+    /**
+     * @Author dingyf
+     * @Description //添加表设计器目录或者是设计
+     * @Date 2020/10/21 18:50
+     * @Param [quataSearchResponse]
+     * @return int
+     **/
+    @Override
+    public int addTargetDesignParentTree(QuataSearchResponse quataSearchResponse) {
+        TargetDesignParent targetDesignParent = new TargetDesignParent();
+        targetDesignParent.setId(UUIDUtils.getUUID());
+        targetDesignParent.setType(quataSearchResponse.getName());
+        targetDesignParent.setExtend1(quataSearchResponse.getFileOrDir());
+        targetDesignParent.setParentid(quataSearchResponse.getPid());
+        return targetDesignParentMapper.insertSelective(targetDesignParent);
+    }
 }

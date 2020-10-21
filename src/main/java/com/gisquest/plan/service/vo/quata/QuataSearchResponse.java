@@ -38,6 +38,39 @@ public class QuataSearchResponse implements Serializable {
 
     private String ave; // 平均值
 
+    /******指标表设计树形结构添加*******/
+    private String name; // 名称
+    private String pid;// 父id
+    private String fileOrDir; // 文件or文件夹(1文件夹,2文件)
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public String getFileOrDir() {
+        return fileOrDir;
+    }
+
+    public void setFileOrDir(String fileOrDir) {
+        this.fileOrDir = fileOrDir;
+    }
+
     public String getTableName() {
         return tableName;
     }

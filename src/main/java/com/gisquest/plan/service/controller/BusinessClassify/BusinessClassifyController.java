@@ -46,6 +46,16 @@ public class BusinessClassifyController {
     public ResponseResult getAreaList() {
         return ResponseResult.ok(businessClassifyService.getAreaList());
     }
+    @ApiOperation("指标表设计树形结构添加")
+    @PostMapping("/addTargetDesignParentTree")
+    public ResponseResult addTargetDesignParentTree(@RequestBody QuataSearchResponse quataSearchResponse) {
+        int i = businessClassifyService.addTargetDesignParentTree(quataSearchResponse);
+        if (i == 1){
+            return ResponseResult.ok(200,"成功");
+        }else{
+            return ResponseResult.error("指标表设计树形结构添加插入失败");
+        }
+    }
     @ApiOperation("指标表设计树形结构")
     @GetMapping("/TargetDesignParentTree")
     public ResponseResult getTargetDesignParentTree() {

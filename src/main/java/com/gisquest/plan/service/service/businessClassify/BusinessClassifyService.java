@@ -23,4 +23,6 @@ public interface BusinessClassifyService {
     List<District> getAreaList();
 
     List<Map<String, Object>>  getTargetDesignParentTree();
+
+    int addTargetDesignParentTree(QuataSearchResponse quataSearchResponse);
 }
