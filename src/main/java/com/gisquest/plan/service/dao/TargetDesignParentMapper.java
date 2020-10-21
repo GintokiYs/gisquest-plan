@@ -2,6 +2,8 @@ package com.gisquest.plan.service.dao;
 
 import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
 
+import java.util.List;
+
 public interface TargetDesignParentMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,6 @@ public interface TargetDesignParentMapper {
     int updateByPrimaryKeySelective(TargetDesignParent record);
 
     int updateByPrimaryKey(TargetDesignParent record);
+
+    List<TargetDesignParent> seletAll();
 }

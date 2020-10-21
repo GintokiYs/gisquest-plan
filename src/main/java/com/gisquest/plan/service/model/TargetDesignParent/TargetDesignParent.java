@@ -1,4 +1,7 @@
 package com.gisquest.plan.service.model.TargetDesignParent;
+
+import java.util.List;
+
 /**
  * @Author
  * @Description //指标设计器实体类
@@ -18,6 +21,8 @@ public class TargetDesignParent {
     private String extend2;
 
     private String extend3;
+
+    private List<TargetDesignParent> targetDesignParent;
 
     public String getId() {
         return id;

@@ -46,5 +46,9 @@ public class BusinessClassifyController {
     public ResponseResult getAreaList() {
         return ResponseResult.ok(businessClassifyService.getAreaList());
     }
-
+    @ApiOperation("指标表设计树形结构")
+    @GetMapping("/TargetDesignParentTree")
+    public ResponseResult getTargetDesignParentTree() {
+        return ResponseResult.ok(businessClassifyService.getTargetDesignParentTree());
+    }
 }
