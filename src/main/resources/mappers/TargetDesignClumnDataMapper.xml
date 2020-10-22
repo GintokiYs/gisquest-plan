@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gisquest.plan.service.dao.TargetDesignClumnDataMapper" >
+  <resultMap id="BaseResultMap" type="com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="target_design_id" property="targetDesignId" jdbcType="VARCHAR" />
+    <result column="extend1" property="extend1" jdbcType="VARCHAR" />
+    <result column="extend2" property="extend2" jdbcType="VARCHAR" />
+    <result column="extend3" property="extend3" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="VARCHAR" />
+    <result column="clumn_name" property="clumnName" jdbcType="VARCHAR" />
+    <result column="clumn_data" property="clumnData" jdbcType="VARCHAR" />
+    <result column="clumn_name_id" property="clumnNameId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type, target_design_id, extend1, extend2, extend3, sequence, clumn_name_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from target_design_clumn_data
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap"  >
+        SELECT
+        clu."type" clumn_name,
+        da."type" clumn_data,
+        da.target_design_id,
+        da.clumn_name_id
+    FROM
+        target_design_name clu
+    LEFT JOIN target_design_clumn_data da ON clu."id" = da.clumn_name_id
+    WHERE
+        clu.isdelete = '0'
+    ORDER BY
+        clu."sequence"
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from target_design_clumn_data
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData" >
+    insert into target_design_clumn_data (id, type, target_design_id, 
+      extend1, extend2, extend3, 
+      sequence, clumn_name_id)
+    values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{targetDesignId,jdbcType=VARCHAR}, 
+      #{extend1,jdbcType=VARCHAR}, #{extend2,jdbcType=VARCHAR}, #{extend3,jdbcType=VARCHAR}, 
+      #{sequence,jdbcType=VARCHAR}, #{clumnNameId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData" >
+    insert into target_design_clumn_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="targetDesignId != null" >
+        target_design_id,
+      </if>
+      <if test="extend1 != null" >
+        extend1,
+      </if>
+      <if test="extend2 != null" >
+        extend2,
+      </if>
+      <if test="extend3 != null" >
+        extend3,
+      </if>
+      <if test="sequence != null" >
+        sequence,
+      </if>
+      <if test="clumnNameId != null" >
+        clumn_name_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="targetDesignId != null" >
+        #{targetDesignId,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null" >
+        #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null" >
+        #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null" >
+        #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        #{sequence,jdbcType=VARCHAR},
+      </if>
+      <if test="clumnNameId != null" >
+        #{clumnNameId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData" >
+    update target_design_clumn_data
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="targetDesignId != null" >
+        target_design_id = #{targetDesignId,jdbcType=VARCHAR},
+      </if>
+      <if test="extend1 != null" >
+        extend1 = #{extend1,jdbcType=VARCHAR},
+      </if>
+      <if test="extend2 != null" >
+        extend2 = #{extend2,jdbcType=VARCHAR},
+      </if>
+      <if test="extend3 != null" >
+        extend3 = #{extend3,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        sequence = #{sequence,jdbcType=VARCHAR},
+      </if>
+      <if test="clumnNameId != null" >
+        clumn_name_id = #{clumnNameId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData" >
+    update target_design_clumn_data
+    set type = #{type,jdbcType=VARCHAR},
+      target_design_id = #{targetDesignId,jdbcType=VARCHAR},
+      extend1 = #{extend1,jdbcType=VARCHAR},
+      extend2 = #{extend2,jdbcType=VARCHAR},
+      extend3 = #{extend3,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=VARCHAR},
+      clumn_name_id = #{clumnNameId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

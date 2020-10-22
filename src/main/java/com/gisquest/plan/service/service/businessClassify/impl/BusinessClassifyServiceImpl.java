@@ -6,9 +6,11 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.fasterxml.jackson.databind.ser.std.IterableSerializer;
 import com.gisquest.plan.service.dao.*;
 import com.gisquest.plan.service.model.District.District;
+import com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData;
 import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
 import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import com.gisquest.plan.service.model.targetDesign.TargetDesign;
+import com.gisquest.plan.service.model.targetDesignClumnName.TargetDesignClumnName;
 import com.gisquest.plan.service.service.businessClassify.BusinessClassifyService;
 import com.gisquest.plan.service.utils.TargetDesignParentTreeUtil;
 import com.gisquest.plan.service.utils.TargetDesignTreeDataUtil;
@@ -49,6 +51,10 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
 
     @Autowired
     TargetClassifyMapper targetClassifyMapper;
+    @Autowired
+    TargetDesignClumnDataMapper targetDesignClumnDataMapper;
+    @Autowired
+    TargetDesignClumnNameMapper targetDesignClumnNameMapper;
 
     @Override
     public List<TargetResponse> getTargetById(String resourceParentid) {
@@ -292,9 +298,13 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         String targetDesignParentId = quataSearchResponse.getTargetDesignParentId();
         // 区域
         String area = quataSearchResponse.getArea();
+        // 查询列名
+        List<TargetDesignClumnName> clumnNames = targetDesignClumnNameMapper.selectAll();
+        List<TargetDesignClumnData> clumnDatas = targetDesignClumnDataMapper.selectAll();
         //根据指标表设计父id查询数据
         List<TargetDesign> list = targetDesignMapper.getTargetDesignDataByTargetDesignParentId(targetDesignParentId);
-        return TargetDesignTreeDataUtil.getTree(list);
+
+        return TargetDesignTreeDataUtil.getTree(list,clumnNames,clumnDatas);
     }
 
     @Override
