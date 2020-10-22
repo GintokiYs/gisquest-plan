@@ -316,6 +316,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
                 targetDesignMapper.insertSelective(targetDesign);
             }
             return 1;
+
         }
     }
 }
