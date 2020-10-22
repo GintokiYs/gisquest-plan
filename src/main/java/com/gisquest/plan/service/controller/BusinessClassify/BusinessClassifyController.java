@@ -57,8 +57,23 @@ public class BusinessClassifyController {
         }
     }
     @ApiOperation("指标表设计树形结构")
-    @GetMapping("/TargetDesignParentTree")
+    @GetMapping("/getTargetDesignParentTree")
     public ResponseResult getTargetDesignParentTree() {
         return ResponseResult.ok(businessClassifyService.getTargetDesignParentTree());
+    }
+    @ApiOperation("根据指标设计id获取相关联数据")
+    @PostMapping ("/getTargetDesignDataByTargetDesignParentId")
+    public ResponseResult getTargetDesignDataByTargetDesignParentId(@RequestBody QuataSearchResponse quataSearchResponse) {
+        return ResponseResult.ok(businessClassifyService.getTargetDesignDataByTargetDesignParentId(quataSearchResponse));
+    }
+    @ApiOperation("指标表设计树形结构添加子")
+    @PostMapping("/addTargetDesignTree")
+    public ResponseResult addTargetDesignTree(@RequestBody QuataSearchResponse quataSearchResponse) {
+        int i = businessClassifyService.addTargetDesignTree(quataSearchResponse);
+        if (i == 1){
+            return ResponseResult.ok(200,"成功");
+        }else{
+            return ResponseResult.error("指标表设计树形结构添加插入失败");
+        }
     }
 }

@@ -25,6 +25,26 @@
     from target_design
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="getTargetDesignDataByTargetDesignParentId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+
+    SELECT
+
+    classify."type" AS TYPE,
+    design."id",
+    design.area,
+    design.parentid,
+    design."alias",
+    design.target_parentid,
+    design."column_name",
+    design.column_data,
+    design.extend1,
+    design."type" extend2
+    FROM
+    target_design design
+    LEFT JOIN target_classify classify ON design.target_parentid = classify."id"
+    where target_design_parent_id = #{targetDesignParentId,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from target_design
     where id = #{id,jdbcType=VARCHAR}
