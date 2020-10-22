@@ -2,6 +2,7 @@ package com.gisquest.plan.service.service.businessClassify;
 
 import com.gisquest.plan.service.model.District.District;
 import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
+import com.gisquest.plan.service.model.targetDesign.TargetDesign;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
 
@@ -25,4 +26,8 @@ public interface BusinessClassifyService {
     List<Map<String, Object>>  getTargetDesignParentTree();
 
     int addTargetDesignParentTree(QuataSearchResponse quataSearchResponse);
+
+    List<Map<String, Object>> getTargetDesignDataByTargetDesignParentId(QuataSearchResponse quataSearchResponse);
+
+    int addTargetDesignTree(QuataSearchResponse quataSearchResponse);
 }

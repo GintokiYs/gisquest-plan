@@ -43,6 +43,25 @@ public class QuataSearchResponse implements Serializable {
     private String pid;// 父id
     private String fileOrDir; // 文件or文件夹(1文件夹,2文件)
 
+    private String targetDesignParentId;// 指标设计选择id
+    private List<String> targetClassifyIds; //指标集合ids
+
+    public List<String> getTargetClassifyIds() {
+        return targetClassifyIds;
+    }
+
+    public void setTargetClassifyIds(List<String> targetClassifyIds) {
+        this.targetClassifyIds = targetClassifyIds;
+    }
+
+    public String getTargetDesignParentId() {
+        return targetDesignParentId;
+    }
+
+    public void setTargetDesignParentId(String targetDesignParentId) {
+        this.targetDesignParentId = targetDesignParentId;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
