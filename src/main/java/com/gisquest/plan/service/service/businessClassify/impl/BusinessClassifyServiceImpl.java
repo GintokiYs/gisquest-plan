@@ -3,14 +3,13 @@ package com.gisquest.plan.service.service.businessClassify.impl;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
-import com.gisquest.plan.service.dao.BusinessClassifyMapper;
-import com.gisquest.plan.service.dao.DistrictMapper;
-import com.gisquest.plan.service.dao.SearchMapper;
-import com.gisquest.plan.service.dao.TargetClassifyMapper;
+import com.gisquest.plan.service.dao.*;
 import com.gisquest.plan.service.model.District.District;
+import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
 import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import com.gisquest.plan.service.service.businessClassify.BusinessClassifyService;
 import com.gisquest.plan.service.utils.TransformUtil;
+import com.gisquest.plan.service.utils.UUIDUtils;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +41,8 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
     SearchMapper searchMapper;
     @Autowired
     DistrictMapper districtMapper;
+    @Autowired
+    TargetDesignParentMapper targetDesignParentMapper;
 
     @Autowired
     TargetClassifyMapper targetClassifyMapper;
@@ -222,5 +223,81 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
     @Override
     public List<District> getAreaList() {
         return districtMapper.selectAll();
+    }
+    /**
+     * @Author
+     * @Description //指标表数据树形结构
+     * @Date 2020/10/21 16:21
+     * @Param []
+     * @return java.util.List<com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent>
+     **/
+    @Override
+    public List<Map<String, Object>>  getTargetDesignParentTree() {
+        List<TargetDesignParent> list = targetDesignParentMapper.seletAll();
+        // 使用递归查询
+        List<Map<String, Object>> tree = getTree(list);
+
+        return tree;
+    }
+
+
+
+    public static List<Map<String, Object>> getTree(List<TargetDesignParent> list) {
+        List<Map<String, Object>> firstNodeList = new ArrayList<Map<String, Object>>();
+        List<TargetDesignParent> removeList = new ArrayList<TargetDesignParent>();
+        for (TargetDesignParent dt:list) {
+            //获取所有一级
+            if ("0".equals(dt.getParentid())) {
+                Map<String, Object> treeMap = new HashMap<String, Object>();
+                treeMap.put("id", dt.getId());
+                treeMap.put("isfile", dt.getExtend1() == "1"?true:false);
+                treeMap.put("label", dt.getType());
+                treeMap.put("pId", "0");
+                treeMap.put("children",new ArrayList<Map<String, Object>>());
+                firstNodeList.add(treeMap);
+                removeList.add(dt);
+            }
+        }
+        list.removeAll(removeList);
+        firstNodeList = getChildTree(firstNodeList, list);
+        return firstNodeList;
+    }
+    public static List<Map<String, Object>> getChildTree (List<Map<String, Object>> nodeList, List<TargetDesignParent> list) {
+        for (Map<String, Object> node:nodeList ) {
+            List<Map<String, Object>> nextNodeList = new ArrayList<Map<String, Object>>();
+            List<TargetDesignParent> removeList = new ArrayList<TargetDesignParent>();
+            for (TargetDesignParent dt:list) {
+                if (dt.getParentid().equals(String.valueOf(node.get("id")))) {
+                    Map<String, Object> treeMap = new HashMap<String, Object>();
+                    treeMap.put("id", dt.getId());
+                    treeMap.put("isfile", dt.getExtend1() == "1"?true:false);
+                    treeMap.put("label", dt.getType());
+                    treeMap.put("pId", dt.getParentid());
+                    treeMap.put("children",new ArrayList<Map<String, Object>>());
+                    nextNodeList.add(treeMap);
+                    removeList.add(dt);
+                }
+            }
+            list.removeAll(removeList);
+            nextNodeList = getChildTree(nextNodeList, list);
+            node.put("children",nextNodeList);
+        }
+        return nodeList;
+    }
+    /**
+     * @Author dingyf
+     * @Description //添加表设计器目录或者是设计
+     * @Date 2020/10/21 18:50
+     * @Param [quataSearchResponse]
+     * @return int
+     **/
+    @Override
+    public int addTargetDesignParentTree(QuataSearchResponse quataSearchResponse) {
+        TargetDesignParent targetDesignParent = new TargetDesignParent();
+        targetDesignParent.setId(UUIDUtils.getUUID());
+        targetDesignParent.setType(quataSearchResponse.getName());
+        targetDesignParent.setExtend1(quataSearchResponse.getFileOrDir());
+        targetDesignParent.setParentid(quataSearchResponse.getPid());
+        return targetDesignParentMapper.insertSelective(targetDesignParent);
     }
 }
