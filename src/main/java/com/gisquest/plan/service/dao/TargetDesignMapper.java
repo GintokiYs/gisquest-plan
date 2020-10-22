@@ -4,7 +4,9 @@ import com.gisquest.plan.service.model.targetDesign.TargetDesign;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TargetDesignMapper {
      List<TargetDesign> getTargetDesignDataByTargetDesignParentId(@Param("targetDesignParentId") String targetDesignParentId);
     int deleteByPrimaryKey(String id);

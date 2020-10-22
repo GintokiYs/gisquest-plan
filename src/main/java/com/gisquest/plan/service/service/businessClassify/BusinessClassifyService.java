@@ -19,6 +19,8 @@ public interface BusinessClassifyService {
 
     Map<String, Object> getTargetList(QuataSearchResponse quataSearchResponse);
 
+    Map<String, Object> getTargetListBySource(QuataSearchResponse quataSearchResponse);
+
     ResponseResult downloadTargetList(QuataSearchResponse quataSearchResponse);
 
     List<District> getAreaList();

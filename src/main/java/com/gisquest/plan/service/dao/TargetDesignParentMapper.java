@@ -1,9 +1,11 @@
 package com.gisquest.plan.service.dao;
 
 import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TargetDesignParentMapper {
     int deleteByPrimaryKey(String id);
 

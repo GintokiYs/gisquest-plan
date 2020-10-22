@@ -63,9 +63,9 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         List<QuataResponse> medianList = new ArrayList<>();
 
         TargetClassify targetClassify = targetClassifyMapper.getTable(quataSearchResponse.getQuataId());
-        if(!StringUtils.isEmpty(quataSearchResponse.getAreaSoure())){ //初始化
-            if(quataSearchResponse.getEqually().equals("true")){ //同源
 
+        if(quataSearchResponse.getEqually().equals("true")){ //同源
+            if(!StringUtils.isEmpty(quataSearchResponse.getAreaSoure())){
                 String tableName = "t" + TransformUtil.frontCompWithZore(targetClassify.getAlias(), 6);
                 quataSearchResponse.setTableName(tableName);
                 StringBuilder sb = new StringBuilder();
@@ -132,10 +132,26 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
                     }
                 }
 
-            }else {
+            }else {  //同源页面初始化
+                String tableName = "t" + TransformUtil.frontCompWithZore(targetClassify.getAlias(), 6);
+                quataSearchResponse.setTableName(tableName);
+                quataSearchResponse.setAreaSoure("0");
+                List<QuataResponse> list1= searchMapper.getTargetList(quataSearchResponse);
+                if(list1.size() ==0){
+                    quataSearchResponse.setAreaSoure("1");
+                    list1 = searchMapper.getTargetList(quataSearchResponse);
+                    if(list1.size() ==0){
+                        quataSearchResponse.setAreaSoure("2");
+                        list1 = searchMapper.getTargetList(quataSearchResponse);
+                        if(list1.size() ==0){
+                            quataSearchResponse.setAreaSoure("3");
+                            list1 = searchMapper.getTargetList(quataSearchResponse);
+                        }
+                    }
 
+                }
+                responses.addAll(list1);
             }
-
         }else {
             String tableName = "t" + TransformUtil.frontCompWithZore(targetClassify.getAlias(), 6);
             quataSearchResponse.setTableName(tableName);
@@ -155,11 +171,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
 
             }
             responses.addAll(list1);
-
         }
-
-
-
 
 
         Map<String, Object> hashMap = new HashMap();
@@ -168,6 +180,11 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         hashMap.put("median", medianList);
         hashMap.put("source", quataSearchResponse.getAreaSoure());
         return hashMap;
+    }
+
+    @Override
+    public Map<String, Object> getTargetListBySource(QuataSearchResponse quataSearchResponse) {
+        return null;
     }
 
     @Override

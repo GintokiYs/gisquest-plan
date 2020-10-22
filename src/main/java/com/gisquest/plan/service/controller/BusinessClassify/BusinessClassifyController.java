@@ -36,6 +36,12 @@ public class BusinessClassifyController {
         return ResponseResult.ok(businessClassifyService.getTargetList(quataSearchResponse));
     }
 
+    @ApiOperation("不同源数据指标查询根据来源")
+    @PostMapping("/getTargetListBySource")
+    public ResponseResult getTargetListBySource(@RequestBody QuataSearchResponse quataSearchResponse) {
+        return ResponseResult.ok(businessClassifyService.getTargetListBySource(quataSearchResponse));
+    }
+
     @ApiOperation("查询指标生成EXCEL并下载")
     @PostMapping("/downloadTargetList")
     public ResponseResult downloadTargetList(@RequestBody QuataSearchResponse quataSearchResponse) {
