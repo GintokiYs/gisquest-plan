@@ -402,7 +402,8 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         // 自定义列添加后 直接返回
         int max = targetDesignClumnNameMapper.selectMax();
         TargetDesignClumnName targetDesignClumnName = new TargetDesignClumnName();
-        targetDesignClumnName.setId(UUIDUtils.getUUID());
+        String clumnId = UUIDUtils.getUUID();
+        targetDesignClumnName.setId(clumnId);
         targetDesignClumnName.setSequence(String.valueOf(max+1));
         // 默认不删
         targetDesignClumnName.setIsdelete("0");
@@ -416,6 +417,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             for (String targetClassifyId : targetClassifyIds) {
                 targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
                 targetClassifyResponse.setId(targetClassifyId);
+                targetClassifyResponse.setColumnId(clumnId);
                 targetClassifyResponse.setColumnData("");
                 list.add(targetClassifyResponse);
             }
@@ -437,6 +439,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             for (String targetClassifyId : targetClassifyIds) {
                 targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
                 targetClassifyResponse.setId(targetClassifyId);
+                targetClassifyResponse.setColumnId(clumnId);
                 List<TagResponse> collect = tags.stream().filter(item -> targetClassifyId.equals(item.getTargetId())).collect(Collectors.toList());
                 if (null != collect && collect.size()>0){
                     double target = collect.get(0).getTarget();
@@ -468,6 +471,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             for (String targetClassifyId : targetClassifyIds) {
                 targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
                 targetClassifyResponse.setId(targetClassifyId);
+                targetClassifyResponse.setColumnId(clumnId);
                 List<TagResponse> collect = tags.stream().filter(item -> targetClassifyId.equals(item.getTargetId())).collect(Collectors.toList());
                 if (null != collect && collect.size()>0){
                     double target = collect.get(0).getTarget();

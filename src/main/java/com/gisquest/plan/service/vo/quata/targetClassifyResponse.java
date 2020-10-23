@@ -22,6 +22,16 @@ public class targetClassifyResponse implements Serializable {
 
     private String columnData;
 
+    private String columnId;
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(String columnId) {
+        this.columnId = columnId;
+    }
+
     public String getColumnData() {
         return columnData;
     }
