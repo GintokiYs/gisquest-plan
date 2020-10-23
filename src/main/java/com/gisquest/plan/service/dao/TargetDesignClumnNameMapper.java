@@ -18,4 +18,6 @@ public interface TargetDesignClumnNameMapper {
     int updateByPrimaryKey(TargetDesignClumnName record);
 
     List<TargetDesignClumnName> selectAll();
+
+    int selectMax();
 }

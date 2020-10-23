@@ -18,6 +18,8 @@ public class QuataSearchResponse implements Serializable {
 
     private String tableName;
     //年份
+
+
     private int year;
     //区域
     private String area;
@@ -46,6 +48,39 @@ public class QuataSearchResponse implements Serializable {
 
     private String targetDesignParentId;// 指标设计选择id
     private List<String> targetClassifyIds; //指标集合ids
+
+    /******指标表设计添加列*******/
+    private String addColumnType;// 添加列类型
+    private String columnName; //列名
+    //区域代码
+    private String areaCode;
+
+
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getColumnName() {
+        return columnName;
+    }
+
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
+
+    public String getAddColumnType() {
+        return addColumnType;
+    }
+
+    public void setAddColumnType(String addColumnType) {
+        this.addColumnType = addColumnType;
+    }
 
     public String getQuataId() {
         return quataId;

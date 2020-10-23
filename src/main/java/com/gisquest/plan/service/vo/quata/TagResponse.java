@@ -1,6 +1,13 @@
-package com.gisquest.plan.service.model.tag;
+package com.gisquest.plan.service.vo.quata;
 
-public class Tag {
+/**
+ * @Title: TagResponse
+ * @ProjectName plan
+ * @Description: TODO
+ * @Date 2020/10/23 14:34
+ * @Version 2.0
+ */
+public class TagResponse {
     private String id;
 
     private String targetId;
@@ -11,7 +18,7 @@ public class Tag {
 
     private Integer year;
 
-    private Long target;
+    private Double target;
 
     private Integer sourceYear;
 
@@ -59,13 +66,6 @@ public class Tag {
         this.year = year;
     }
 
-    public Long getTarget() {
-        return target;
-    }
-
-    public void setTarget(Long target) {
-        this.target = target;
-    }
 
     public Integer getSourceYear() {
         return sourceYear;
@@ -89,5 +89,13 @@ public class Tag {
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode == null ? null : areaCode.trim();
+    }
+
+    public Double getTarget() {
+        return target;
+    }
+
+    public void setTarget(Double target) {
+        this.target = target;
     }
 }

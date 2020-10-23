@@ -13,8 +13,14 @@
   <sql id="Base_Column_List" >
     id, type, extend1, extend2, extend3, sequence, isdelete
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectMax" resultType="int">
     select 
+   "count"(*)  AS sequence
+    from target_design_name
+    where isdelete = '0'
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
     <include refid="Base_Column_List" />
     from target_design_name
     where id = #{id,jdbcType=VARCHAR}

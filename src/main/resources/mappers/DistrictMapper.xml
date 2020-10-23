@@ -32,5 +32,8 @@
     select * from district_
 
   </select>
-
+  <select id="selectByareaCode" resultMap="BaseResultMap"  parameterType="java.lang.String">
+    select * from district_
+    where  xzqbh = #{areaCode}
+  </select>
 </mapper>

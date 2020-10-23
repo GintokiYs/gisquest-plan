@@ -10,15 +10,60 @@
     <result column="target" property="target" jdbcType="NUMERIC" />
     <result column="source_year" property="sourceYear" jdbcType="INTEGER" />
     <result column="alias" property="alias" jdbcType="INTEGER" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="TagResponseBaseResultMap" type="com.gisquest.plan.service.vo.quata.TagResponse" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="target_id" property="targetId" jdbcType="VARCHAR" />
+    <result column="index_id" property="indexId" jdbcType="VARCHAR" />
+    <result column="area_type" property="areaType" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="target" property="target" jdbcType="NUMERIC" />
+    <result column="source_year" property="sourceYear" jdbcType="INTEGER" />
+    <result column="alias" property="alias" jdbcType="INTEGER" />
+    <result column="area_code" property="areaCode" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, target_id, index_id, area_type, year, target, source_year, alias
+    id, target_id, index_id, area_type, year, target, source_year, alias, area_code
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from tag
     where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectOrderByKeword" resultMap="BaseResultMap" >
+        SELECT
+        area_type,
+        source_year,
+        YEAR
+    FROM
+        tag
+    GROUP BY
+        area_type,
+        source_year,
+        YEAR
+  </select>
+  <select id="selectOrderByCondition" resultMap="TagResponseBaseResultMap" parameterType="com.gisquest.plan.service.model.tag.Tag">
+        SELECT
+        target_id,
+        target
+    FROM
+        tag
+    <where>
+      <if test="areaCode != null and areaCode!=''">
+        and area_code = #{areaCode}
+      </if>
+      <if test="year != null and year!=''">
+        and year = #{year}
+      </if>
+      <if test="sourceYear != null and sourceYear!=''">
+        and source_year = #{sourceYear}
+      </if>
+      <if test="areaType != null and areaType!=''">
+        and area_type = #{areaType}
+      </if>
+    </where>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from tag
@@ -27,10 +72,12 @@
   <insert id="insert" parameterType="com.gisquest.plan.service.model.tag.Tag" >
     insert into tag (id, target_id, index_id, 
       area_type, year, target, 
-      source_year, alias)
+      source_year, alias, area_code
+      )
     values (#{id,jdbcType=VARCHAR}, #{targetId,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR}, 
       #{areaType,jdbcType=VARCHAR}, #{year,jdbcType=INTEGER}, #{target,jdbcType=NUMERIC}, 
-      #{sourceYear,jdbcType=INTEGER}, #{alias,jdbcType=INTEGER})
+      #{sourceYear,jdbcType=INTEGER}, #{alias,jdbcType=INTEGER}, #{areaCode,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.gisquest.plan.service.model.tag.Tag" >
     insert into tag
@@ -59,6 +106,9 @@
       <if test="alias != null" >
         alias,
       </if>
+      <if test="areaCode != null" >
+        area_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -84,6 +134,9 @@
       </if>
       <if test="alias != null" >
         #{alias,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null" >
+        #{areaCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -111,6 +164,9 @@
       <if test="alias != null" >
         alias = #{alias,jdbcType=INTEGER},
       </if>
+      <if test="areaCode != null" >
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -122,7 +178,8 @@
       year = #{year,jdbcType=INTEGER},
       target = #{target,jdbcType=NUMERIC},
       source_year = #{sourceYear,jdbcType=INTEGER},
-      alias = #{alias,jdbcType=INTEGER}
+      alias = #{alias,jdbcType=INTEGER},
+      area_code = #{areaCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

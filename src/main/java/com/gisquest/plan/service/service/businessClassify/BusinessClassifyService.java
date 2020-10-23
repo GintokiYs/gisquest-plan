@@ -8,6 +8,7 @@ import com.gisquest.plan.service.vo.quata.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author honght
@@ -32,4 +33,8 @@ public interface BusinessClassifyService {
     List<Map<String, Object>> getTargetDesignDataByTargetDesignParentId(QuataSearchResponse quataSearchResponse);
 
     int addTargetDesignTree(QuataSearchResponse quataSearchResponse);
+
+    Map<String, Set<Object>>  getTargetDesignAddColumnDropDownBoxData();
+
+    List<targetClassifyResponse>  addTargetDesignAddColumn(QuataSearchResponse quataSearchResponse);
 }

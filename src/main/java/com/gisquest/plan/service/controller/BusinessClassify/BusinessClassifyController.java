@@ -82,4 +82,15 @@ public class BusinessClassifyController {
             return ResponseResult.error("指标表设计树形结构添加插入失败");
         }
     }
+    @ApiOperation("指标表设计添加列下拉框数据获取")
+    @GetMapping("/getTargetDesignAddColumnDropDownBoxData")
+    public ResponseResult getTargetDesignAddColumnDropDownBoxData() {
+        return ResponseResult.ok(businessClassifyService.getTargetDesignAddColumnDropDownBoxData());
+    }
+
+    @ApiOperation("指标表设计添加列")
+    @PostMapping("/addTargetDesignAddColumn")
+    public ResponseResult addTargetDesignAddColumn(@RequestBody QuataSearchResponse quataSearchResponse) {
+        return ResponseResult.ok(businessClassifyService.addTargetDesignAddColumn(quataSearchResponse));
+    }
 }

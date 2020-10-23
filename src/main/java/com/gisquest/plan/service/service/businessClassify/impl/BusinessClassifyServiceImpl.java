@@ -3,11 +3,11 @@ package com.gisquest.plan.service.service.businessClassify.impl;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
-import com.fasterxml.jackson.databind.ser.std.IterableSerializer;
 import com.gisquest.plan.service.dao.*;
 import com.gisquest.plan.service.model.District.District;
 import com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData;
 import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
+import com.gisquest.plan.service.model.tag.Tag;
 import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import com.gisquest.plan.service.model.targetDesign.TargetDesign;
 import com.gisquest.plan.service.model.targetDesignClumnName.TargetDesignClumnName;
@@ -19,8 +19,10 @@ import com.gisquest.plan.service.utils.UUIDUtils;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -48,7 +50,8 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
     TargetDesignParentMapper targetDesignParentMapper;
     @Autowired
     TargetDesignMapper targetDesignMapper;
-
+    @Autowired
+    TagMapper tagMapper;
     @Autowired
     TargetClassifyMapper targetClassifyMapper;
     @Autowired
@@ -328,5 +331,156 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             return 1;
 
         }
+    }
+    /**
+     * @Description //指标表设计添加列下拉框数据获取
+     * @Date 2020/10/23 10:38
+     * @Param []
+     * @return java.util.Map<java.lang.String,java.util.List<java.lang.Object>>
+     **/
+    @Override
+    public Map<String, Set<Object>> getTargetDesignAddColumnDropDownBoxData() {
+        Map<String, Set<Object>> map = new HashMap<>();
+        List<Tag>  tagList = tagMapper.selectOrderByKeword();
+        // 获取国家省市县
+        List<String> collect = tagList.stream().map(item -> item.getAreaType()).collect(Collectors.toList());
+        Set<String>  areaTypes = new HashSet<String>(collect);
+        Set<Object>  area = new HashSet<Object>(areaTypes.size());
+        for (String areaType : areaTypes) {
+            //0为国家，1为省，2为市，3为区县
+            if ("0".equals(areaType)){
+                area.add("国家");
+            }else if ("1".equals(areaType)){
+                area.add("省");
+            }else if ("2".equals(areaType)){
+                area.add("市");
+            }else if ("3".equals(areaType)){
+                area.add("县");
+            }
+        }
+        // 数据来源年份
+        List<Integer> collect1 = tagList.stream().map(item -> item.getSourceYear()).collect(Collectors.toList());
+        Set<Object>  sourceYears = new HashSet<Object>(collect1);
+        // 获取数据采集年份
+        List<Integer> collect2 = tagList.stream().map(item -> item.getYear()).collect(Collectors.toList());
+        Set<Object>  years = new HashSet<Object>(collect2);
+        map.put("dataSources",area);
+        map.put("sourceYears",sourceYears);
+        map.put("years",years);
+        return map;
+    }
+    /**
+     * @Description //添加列 并查询将数据返回
+     * @Date 2020/10/23 11:05
+     * @Param [quataSearchResponse]
+     * @return java.util.List<com.gisquest.plan.service.vo.quata.targetClassifyResponse>
+     **/
+    @Override
+    @Transactional
+    public List<targetClassifyResponse> addTargetDesignAddColumn(QuataSearchResponse quataSearchResponse) {
+        String addColumnType = quataSearchResponse.getAddColumnType();
+        // 采集年份
+        int sourceYear = quataSearchResponse.getSourceYear();
+        // 年份
+        int year = quataSearchResponse.getYear();
+        // 获取区域编码
+        String areaCode = quataSearchResponse.getAreaCode();
+        //0为国家，1为省，2为市，3为区县
+        String areaSoure = quataSearchResponse.getAreaSoure();
+        if ("国家".equals(areaSoure)){
+            areaSoure = "0";
+        }else if ("省".equals(areaSoure)){
+            areaSoure = "1";
+        }else if ("市".equals(areaSoure)){
+            areaSoure = "2";
+        }else if ("县".equals(areaSoure)){
+            areaSoure = "3";
+        }
+        List<targetClassifyResponse> list = new ArrayList<>();
+        // 数据对应的ids
+        List<String> targetClassifyIds = quataSearchResponse.getTargetClassifyIds();
+        // 自定义列添加后 直接返回
+        int max = targetDesignClumnNameMapper.selectMax();
+        TargetDesignClumnName targetDesignClumnName = new TargetDesignClumnName();
+        targetDesignClumnName.setId(UUIDUtils.getUUID());
+        targetDesignClumnName.setSequence(String.valueOf(max+1));
+        // 默认不删
+        targetDesignClumnName.setIsdelete("0");
+
+        // 1:年份列 2:区域列 3:自定义列
+        if (Objects.equals("3",addColumnType)){
+            // 列名
+            targetDesignClumnName.setType(quataSearchResponse.getColumnName());
+
+            // 将数据返回  将数据根据叶子节点组装数据返回为空
+            for (String targetClassifyId : targetClassifyIds) {
+                targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
+                targetClassifyResponse.setId(targetClassifyId);
+                targetClassifyResponse.setColumnData("");
+                list.add(targetClassifyResponse);
+            }
+            // 新增列名
+            targetDesignClumnNameMapper.insertSelective(targetDesignClumnName);
+            return list;
+        }else if (Objects.equals("1",addColumnType)){
+            // 列名
+            targetDesignClumnName.setType(String.valueOf(year));
+            // 将数据组装返回
+            // 查询数据  查询tag表数据
+            Tag tag = new Tag();
+            tag.setSourceYear(sourceYear);
+            tag.setYear(year);
+            // 数据来源
+            tag.setAreaType(areaSoure);
+            tag.setAreaCode(areaCode);
+            List<TagResponse> tags = tagMapper.selectOrderByCondition(tag);
+            for (String targetClassifyId : targetClassifyIds) {
+                targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
+                targetClassifyResponse.setId(targetClassifyId);
+                List<TagResponse> collect = tags.stream().filter(item -> targetClassifyId.equals(item.getTargetId())).collect(Collectors.toList());
+                if (null != collect && collect.size()>0){
+                    double target = collect.get(0).getTarget();
+                    targetClassifyResponse.setColumnData(String.valueOf(target));
+                }else {
+                    targetClassifyResponse.setColumnData("");
+                }
+                list.add(targetClassifyResponse);
+            }
+        }else{
+            // 区域列
+            District district = districtMapper.selectByareaCode(areaCode);
+            // 列名
+            if(Strings.isBlank(quataSearchResponse.getColumnName())){
+                // 组装列名  地区加年份
+                targetDesignClumnName.setType(district.getName()+ String.valueOf(year));
+            }else{
+                targetDesignClumnName.setType(quataSearchResponse.getColumnName());
+            }
+            // 将数据组装返回
+            // 查询数据
+            Tag tag = new Tag();
+            tag.setSourceYear(sourceYear);
+            tag.setYear(year);
+            // 数据来源
+            tag.setAreaType(areaSoure);
+            tag.setAreaCode(areaCode);
+            List<TagResponse> tags = tagMapper.selectOrderByCondition(tag);
+            for (String targetClassifyId : targetClassifyIds) {
+                targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
+                targetClassifyResponse.setId(targetClassifyId);
+                List<TagResponse> collect = tags.stream().filter(item -> targetClassifyId.equals(item.getTargetId())).collect(Collectors.toList());
+                if (null != collect && collect.size()>0){
+                    double target = collect.get(0).getTarget();
+                    targetClassifyResponse.setColumnData(String.valueOf(target));
+                }else {
+                    targetClassifyResponse.setColumnData("");
+                }
+                list.add(targetClassifyResponse);
+            }
+
+        }
+        // 新增列名
+        targetDesignClumnNameMapper.insertSelective(targetDesignClumnName);
+        return list;
     }
 }
