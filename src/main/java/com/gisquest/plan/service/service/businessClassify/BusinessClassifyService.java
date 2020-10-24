@@ -37,4 +37,6 @@ public interface BusinessClassifyService {
     Map<String, Set<Object>>  getTargetDesignAddColumnDropDownBoxData();
 
     List<targetClassifyResponse>  addTargetDesignAddColumn(QuataSearchResponse quataSearchResponse);
+    // 查询指标表设计生成EXCEL并下载
+    ResponseResult downloadTargetDesignList(QuataSearchResponse quataSearchResponse);
 }

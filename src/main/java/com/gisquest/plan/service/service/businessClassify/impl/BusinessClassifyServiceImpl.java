@@ -1,5 +1,6 @@
 package com.gisquest.plan.service.service.businessClassify.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
@@ -12,10 +13,7 @@ import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import com.gisquest.plan.service.model.targetDesign.TargetDesign;
 import com.gisquest.plan.service.model.targetDesignClumnName.TargetDesignClumnName;
 import com.gisquest.plan.service.service.businessClassify.BusinessClassifyService;
-import com.gisquest.plan.service.utils.TargetDesignParentTreeUtil;
-import com.gisquest.plan.service.utils.TargetDesignTreeDataUtil;
-import com.gisquest.plan.service.utils.TransformUtil;
-import com.gisquest.plan.service.utils.UUIDUtils;
+import com.gisquest.plan.service.utils.*;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +26,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -486,5 +486,100 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         // 新增列名
         targetDesignClumnNameMapper.insertSelective(targetDesignClumnName);
         return list;
+    }
+    /**
+     * @Description //查询指标表设计生成EXCEL并下载
+     * @Date 2020/10/24 10:53
+     * @Param [quataSearchResponse]
+     * @return com.gisquest.plan.service.vo.ResponseResult
+     **/
+    @Override
+    public ResponseResult downloadTargetDesignList(QuataSearchResponse quataSearchResponse) {
+        String targetDesignParentId = quataSearchResponse.getTargetDesignParentId();
+        TargetDesignParent targetDesignParent = targetDesignParentMapper.selectByPrimaryKey(targetDesignParentId);
+        // 获得request对象,response对象
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletResponse response = attributes.getResponse();
+        List<Map<String, Object>> result = getTargetDesignDataByTargetDesignParentId(quataSearchResponse);
+
+        // 通过工具类创建writer，创建xlsx格式
+        // 查询列名
+        List<TargetDesignClumnName> targetDesignClumnNames = targetDesignClumnNameMapper.selectAll();
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        // 合并单元格后的标题行，使用默认标题样式
+        writer.merge(targetDesignClumnNames.size()+2, targetDesignParent.getType());
+        //excel内容
+        List<List<String>> data = new ArrayList<>();
+        //标题
+        List<String> rowData = new ArrayList();
+        rowData.add("序号");
+        rowData.add("领域");
+        rowData.add("指标");
+        //标题
+        for (TargetDesignClumnName targetDesignClumnName : targetDesignClumnNames) {
+            rowData.add(targetDesignClumnName.getType());
+        }
+        writer.writeHeadRow(rowData);
+
+        writer.renameSheet(targetDesignParent.getType());
+        // 设置数据
+        for (Map<String, Object> targetDesignData : result) {
+            /**
+             * @Description //写不下去了
+             * @Date 2020/10/24 16:11
+             * @Param [quataSearchResponse]
+             * @return com.gisquest.plan.service.vo.ResponseResult
+             **/
+
+            //添加行数据
+            List<String> row = new ArrayList<>(rowData.size());
+
+            // 通过key获取值
+            String type = targetDesignData.get("label").toString();
+            // 是否是文件 true:文件
+            Boolean flag = (Boolean) targetDesignData.get("isfile");
+            // 子数据
+            List<Map<String, Object>> children = (List) targetDesignData.get("children");
+            //一级
+            row.add(type);
+            if (null != children && children.size()>0){
+                //二级 这里有合并之类的操作
+
+
+
+            }else{
+                // 空数据
+
+        }
+        }
+        writer.write(data);
+        // 清空缓存
+        response.reset();
+        String fileName = targetDesignParent.getType() + ".xlsx";
+        OutputStream output = null;
+        try {
+            output = response.getOutputStream();
+            fileName = UrlEncodeChinese.urlEncodeChinese(fileName);
+            // 定义浏览器响应表头，顺带定义下载名
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "ISO-8859-1"));
+            // 设置response的Header
+            // 定义下载的类型，标明是excel文件
+           // response.setContentType("application/vnd.ms-excel");
+            response.setContentType("application/octet-stream");
+            // 这时候把创建好的excel写入到输出流
+            writer.flush(output);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return ResponseResult.ok();
     }
 }
