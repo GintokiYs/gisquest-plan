@@ -1,6 +1,7 @@
 package com.gisquest.plan.service.dao;
 
 import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface TargetDesignParentMapper {
 
     int updateByPrimaryKey(TargetDesignParent record);
 
-    List<TargetDesignParent> seletAll();
+    List<TargetDesignParent> seletAll(@Param("targetDesignParentIds") List<String> collect);
+
+    List<TargetDesignParent> seletByParentId(@Param("targetDesignParentId")String targetDesignParentId);
 }

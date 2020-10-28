@@ -1,5 +1,6 @@
 package com.gisquest.plan.service.dao;
 
+import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
 import com.gisquest.plan.service.model.targetDesign.TargetDesign;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,8 @@ public interface TargetDesignMapper {
     int updateByPrimaryKeySelective(TargetDesign record);
 
     int updateByPrimaryKey(TargetDesign record);
+
+    int deleteByTargetDesignParentid(@Param("targetDesignParentId")String id);
+
+    List<TargetDesign> seletByParentId(@Param("targetDesignId") String targetDesignId);
 }

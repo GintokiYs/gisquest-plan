@@ -1,6 +1,6 @@
 package com.gisquest.plan.service.service.businessClassify.impl;
+import com.google.common.collect.Lists;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
@@ -8,6 +8,8 @@ import com.gisquest.plan.service.dao.*;
 import com.gisquest.plan.service.model.District.District;
 import com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData;
 import com.gisquest.plan.service.model.TargetDesignParent.TargetDesignParent;
+import com.gisquest.plan.service.model.UserTargetDesignClumnname.UserTargetDesignClumnname;
+import com.gisquest.plan.service.model.UserTargetDesignParentid.UserTargetDesignParentid;
 import com.gisquest.plan.service.model.tag.Tag;
 import com.gisquest.plan.service.model.targetClassify.TargetClassify;
 import com.gisquest.plan.service.model.targetDesign.TargetDesign;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,6 +61,10 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
     TargetDesignClumnDataMapper targetDesignClumnDataMapper;
     @Autowired
     TargetDesignClumnNameMapper targetDesignClumnNameMapper;
+    @Autowired
+    UserTargetDesignParentidMapper userTargetDesignParentidMapper;
+    @Autowired
+    UserTargetDesignClumnnameMapper userTargetDesignClumnnameMapper;
 
     @Override
     public List<TargetResponse> getTargetById(String resourceParentid) {
@@ -262,7 +269,12 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
      **/
     @Override
     public List<Map<String, Object>>  getTargetDesignParentTree() {
-        List<TargetDesignParent> list = targetDesignParentMapper.seletAll();
+        // FIXME 当前登录用户id
+        // 获取当前登录人员id
+        String userid = "2583";
+        List<UserTargetDesignParentid> userTargetDesignParentidList = userTargetDesignParentidMapper.selectByUserid(userid);
+        List<String> collect = userTargetDesignParentidList.stream().map(item -> item.getTargetDesignParentid()).collect(Collectors.toList());
+        List<TargetDesignParent> list = targetDesignParentMapper.seletAll(collect);
         // 使用递归查询
         List<Map<String, Object>> tree = TargetDesignParentTreeUtil.getTree(list);
 
@@ -281,11 +293,28 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
      **/
     @Override
     public int addTargetDesignParentTree(QuataSearchResponse quataSearchResponse) {
+        if (Strings.isNotBlank(quataSearchResponse.getTargetDesignParentId())){
+            //编辑
+            TargetDesignParent targetDesignParent = targetDesignParentMapper.selectByPrimaryKey(quataSearchResponse.getTargetDesignParentId());
+            targetDesignParent.setType(quataSearchResponse.getName());
+            return targetDesignParentMapper.updateByPrimaryKey(targetDesignParent);
+
+        }
         TargetDesignParent targetDesignParent = new TargetDesignParent();
-        targetDesignParent.setId(UUIDUtils.getUUID());
+        String uuid = UUIDUtils.getUUID();
+        targetDesignParent.setId(uuid);
         targetDesignParent.setType(quataSearchResponse.getName());
         targetDesignParent.setExtend1(quataSearchResponse.getFileOrDir());
         targetDesignParent.setParentid(quataSearchResponse.getPid());
+
+        UserTargetDesignParentid userTargetDesignParentid = new UserTargetDesignParentid();
+        userTargetDesignParentid.setId(UUIDUtils.getUUID());
+        // FIXME 当前登录用户id
+        userTargetDesignParentid.setUserid("2583");
+        userTargetDesignParentid.setTargetDesignParentid(uuid);
+        userTargetDesignParentidMapper.insertSelective(userTargetDesignParentid);
+
+
         return targetDesignParentMapper.insertSelective(targetDesignParent);
     }
     /**
@@ -302,7 +331,17 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         // 区域
         String area = quataSearchResponse.getArea();
         // 查询列名
-        List<TargetDesignClumnName> clumnNames = targetDesignClumnNameMapper.selectAll();
+        // FIXME 当前登录用户id
+        String userId = "2583";
+        List<UserTargetDesignClumnname> clumnNamesList = userTargetDesignClumnnameMapper.selectByUseridAndTarDesParId(userId,targetDesignParentId);
+        List<String> collect = clumnNamesList.stream().map(item -> item.getClumnid()).collect(Collectors.toList());
+        List<TargetDesignClumnName> clumnNames = null;
+        if (collect.size()>0){
+            clumnNames = targetDesignClumnNameMapper.selectAll(collect);
+        }else{
+            clumnNames = new ArrayList<>();
+        }
+
         List<TargetDesignClumnData> clumnDatas = targetDesignClumnDataMapper.selectAll();
         //根据指标表设计父id查询数据
         List<TargetDesign> list = targetDesignMapper.getTargetDesignDataByTargetDesignParentId(targetDesignParentId);
@@ -322,8 +361,8 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             //文件夹
             return targetDesignMapper.insertSelective(targetDesign);
         }else{
-            //文件 ,从指标直面选择数据添加 target_classify的id  看前端怎么传递 应该是个集合
-            List<String> targetClassifyIds = quataSearchResponse.getTargetClassifyIds();
+            //文件 ,从指标直面选择数据添加 target_Design的id  看前端怎么传递 应该是个集合
+            List<String> targetClassifyIds = quataSearchResponse.getTargetIds();
             for (String targetClassifyId : targetClassifyIds) {
                 targetDesign.setTargetParentid(targetClassifyId);
                 targetDesignMapper.insertSelective(targetDesign);
@@ -378,6 +417,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
     @Override
     @Transactional
     public List<targetClassifyResponse> addTargetDesignAddColumn(QuataSearchResponse quataSearchResponse) {
+
         String addColumnType = quataSearchResponse.getAddColumnType();
         // 采集年份
         int sourceYear = quataSearchResponse.getSourceYear();
@@ -398,15 +438,27 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         }
         List<targetClassifyResponse> list = new ArrayList<>();
         // 数据对应的ids
-        List<String> targetClassifyIds = quataSearchResponse.getTargetClassifyIds();
+        List<String> targetIds = quataSearchResponse.getTargetIds();
         // 自定义列添加后 直接返回
-        int max = targetDesignClumnNameMapper.selectMax();
+        String targetDesignParentId = quataSearchResponse.getTargetDesignParentId();
+        int max = targetDesignClumnNameMapper.selectMax(targetDesignParentId);
         TargetDesignClumnName targetDesignClumnName = new TargetDesignClumnName();
         String clumnId = UUIDUtils.getUUID();
         targetDesignClumnName.setId(clumnId);
         targetDesignClumnName.setSequence(String.valueOf(max+1));
+
+        targetDesignClumnName.setExtend3(targetDesignParentId);
         // 默认不删
         targetDesignClumnName.setIsdelete("0");
+        // 添加用户列关联表
+
+        UserTargetDesignClumnname userTargetDesignClumnname = new UserTargetDesignClumnname();
+        userTargetDesignClumnname.setId(UUIDUtils.getUUID());
+        // FIXME 当前登录用户id
+        userTargetDesignClumnname.setUserid("2583");
+        userTargetDesignClumnname.setTarDesParid(targetDesignParentId);
+        userTargetDesignClumnname.setClumnid(clumnId);
+        userTargetDesignClumnnameMapper.insertSelective(userTargetDesignClumnname);
 
         // 1:年份列 2:区域列 3:自定义列
         if (Objects.equals("3",addColumnType)){
@@ -414,9 +466,9 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             targetDesignClumnName.setType(quataSearchResponse.getColumnName());
 
             // 将数据返回  将数据根据叶子节点组装数据返回为空
-            for (String targetClassifyId : targetClassifyIds) {
+            for (String targetId : targetIds) {
                 targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
-                targetClassifyResponse.setId(targetClassifyId);
+                targetClassifyResponse.setId(targetId);
                 targetClassifyResponse.setColumnId(clumnId);
                 targetClassifyResponse.setColumnData("");
                 list.add(targetClassifyResponse);
@@ -436,7 +488,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             tag.setAreaType(areaSoure);
             tag.setAreaCode(areaCode);
             List<TagResponse> tags = tagMapper.selectOrderByCondition(tag);
-            for (String targetClassifyId : targetClassifyIds) {
+            for (String targetClassifyId : targetIds) {
                 targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
                 targetClassifyResponse.setId(targetClassifyId);
                 targetClassifyResponse.setColumnId(clumnId);
@@ -468,7 +520,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             tag.setAreaType(areaSoure);
             tag.setAreaCode(areaCode);
             List<TagResponse> tags = tagMapper.selectOrderByCondition(tag);
-            for (String targetClassifyId : targetClassifyIds) {
+            for (String targetClassifyId : targetIds) {
                 targetClassifyResponse targetClassifyResponse = new targetClassifyResponse();
                 targetClassifyResponse.setId(targetClassifyId);
                 targetClassifyResponse.setColumnId(clumnId);
@@ -504,7 +556,16 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
 
         // 通过工具类创建writer，创建xlsx格式
         // 查询列名
-        List<TargetDesignClumnName> targetDesignClumnNames = targetDesignClumnNameMapper.selectAll();
+        // FIXME 当前登录用户id
+        String userId = "2583";
+        List<UserTargetDesignClumnname> clumnNamesList = userTargetDesignClumnnameMapper.selectByUseridAndTarDesParId(userId,targetDesignParentId);
+        List<String> collect = clumnNamesList.stream().map(item -> item.getClumnid()).collect(Collectors.toList());
+        List<TargetDesignClumnName> targetDesignClumnNames = null;
+        if (collect.size()>0){
+            targetDesignClumnNames = targetDesignClumnNameMapper.selectAll(collect);
+        }else{
+            targetDesignClumnNames = new ArrayList<>();
+        }
         ExcelWriter writer = ExcelUtil.getWriter(true);
         // 合并单元格后的标题行，使用默认标题样式
         writer.merge(targetDesignClumnNames.size()+2, targetDesignParent.getType());
@@ -581,5 +642,185 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
             }
         }
         return ResponseResult.ok();
+    }
+    /**
+     * @Description //指标表设计洗新增指标树形结构
+     * @Date 2020/10/26 11:01
+     * @Param []
+     * @return java.util.List<java.util.Map<java.lang.String,java.lang.Object>>
+     **/
+    @Override
+    public List<Map<String, Object>> getTargetDesignAddIndicatorParentTree() {
+        List<targetClassifyResponse> targetDesignAddIndicatorParentTree = targetClassifyMapper.getTargetDesignAddIndicatorParentTree();
+        List<targetClassifyResponse> targetDesignAddIndicatorParentTree1 = targetClassifyMapper.getTargetDesignAddIndicatorParentTree1();
+        List<targetClassifyResponse> targetDesignAddIndicatorParentTree2 = targetClassifyMapper.getTargetDesignAddIndicatorParentTree2();
+
+
+        List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+        for (targetClassifyResponse targetClassifyResponse : targetDesignAddIndicatorParentTree) {
+            Map<String, Object> treeMap = new HashMap<String, Object>();
+            treeMap.put("id", targetClassifyResponse.getId());
+            treeMap.put("label", targetClassifyResponse.getType());
+            treeMap.put("pId", "0");
+            treeMap.put("children",new ArrayList<Map<String, Object>>());
+            listMap.add(treeMap);
+            List<targetClassifyResponse> collect1 = targetDesignAddIndicatorParentTree1.stream().filter(item -> item.getParentid().equals(targetClassifyResponse.getId())).collect(Collectors.toList());
+            List<Map<String, Object>> listMap1 = new ArrayList<Map<String, Object>>();
+            for (com.gisquest.plan.service.vo.quata.targetClassifyResponse classifyResponse : collect1) {
+                Map<String, Object> treeMap1 = new HashMap<String, Object>();
+                treeMap1.put("id", classifyResponse.getId());
+                treeMap1.put("label", classifyResponse.getType());
+                treeMap1.put("pId", classifyResponse.getParentid());
+                treeMap1.put("children",new ArrayList<Map<String, Object>>());
+                listMap1.add(treeMap1);
+                List<targetClassifyResponse> collect2 = targetDesignAddIndicatorParentTree2.stream().filter(item -> item.getParentid().equals(classifyResponse.getId())).collect(Collectors.toList());
+                List<Map<String, Object>> listMap2 = new ArrayList<Map<String, Object>>();
+                for (com.gisquest.plan.service.vo.quata.targetClassifyResponse response : collect2) {
+                    Map<String, Object> treeMap2 = new HashMap<String, Object>();
+                    treeMap2.put("id", response.getId());
+                    treeMap2.put("label", response.getType());
+                    treeMap2.put("pId", response.getParentid());
+                    treeMap2.put("children",new ArrayList<Map<String, Object>>());
+                    listMap2.add(treeMap2);
+                }
+                treeMap1.put("children",listMap2);
+            }
+            treeMap.put("children",listMap1);
+        }
+
+        return listMap;
+    }
+    /**
+     * @Description //指标表设计保存或者另存为
+     * @Date 2020/10/26 13:15
+     * @Param [quataSearchResponse]
+     * @return int
+     **/
+    @Override
+    @Transactional
+    public int addTargetDesignSaveOrSaveAs(QuataSearchResponse quataSearchResponse) {
+        try {
+            String saveOrSaveAs = quataSearchResponse.getSaveOrSaveAs();
+            // 另存为 也要将数据返回给我进行保存
+
+            if (Objects.equals("2",saveOrSaveAs)){
+                String targetDesignParentId = quataSearchResponse.getTargetDesignParentId();
+                TargetDesignParent targetDesignParent = targetDesignParentMapper.selectByPrimaryKey(targetDesignParentId);
+                String uuid = UUIDUtils.getUUID();
+                targetDesignParent.setId(uuid);
+                SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date(System.currentTimeMillis());
+                targetDesignParent.setType(targetDesignParent.getType()+formatter.format(date));
+                targetDesignParentMapper.insertSelective(targetDesignParent);
+
+
+                // 另存为
+                List<TargetDesign> list = targetDesignMapper.getTargetDesignDataByTargetDesignParentId(targetDesignParentId);
+                // 将数据保存
+                String uuid1 = UUIDUtils.getUUID();
+                String uuid2 = uuid1.substring(0, 8);
+
+                UserTargetDesignParentid userTargetDesignParentid =userTargetDesignParentidMapper.selectByTargetDesignParentId(targetDesignParentId);
+                userTargetDesignParentid.setId(UUIDUtils.getUUID());
+                // FIXME 当前登录用户id
+                String userId1 = "2583";
+                userTargetDesignParentid.setUserid(userId1);
+                userTargetDesignParentid.setTargetDesignParentid(uuid);
+                userTargetDesignParentidMapper.insertSelective(userTargetDesignParentid);
+                for (TargetDesign targetDesign : list) {
+                    // 这里从前台传递  是个集合  TargetDesignId ClumnNameId 及对应的数据 Type  不应该做查询
+                    List<TargetDesignClumnData> list1 = targetDesignClumnDataMapper.selectBytargetDesignId(targetDesign.getId());
+                    for (TargetDesignClumnData targetDesignClumnData : list1) {
+                        targetDesignClumnData.setTargetDesignId(targetDesign.getId()+uuid2);
+                        targetDesignClumnData.setId(UUIDUtils.getUUID());
+                        // FIXME 根据ClumnNameId 和 targetDesign id 确定唯一数据 设置进值
+                        //targetDesignClumnData.setType();
+                        targetDesignClumnData.setClumnNameId(targetDesignClumnData.getClumnNameId()+ uuid2);
+                        targetDesignClumnDataMapper.insertSelective(targetDesignClumnData);
+                    }
+                    // 将数据copy
+                    targetDesign.setTargetDesignParentId(uuid);
+                    targetDesign.setId(targetDesign.getId()+uuid2);
+                    targetDesign.setParentid(targetDesign.getParentid()+uuid2);
+                    targetDesign.setType(targetDesign.getExtend2());
+                    targetDesignMapper.insertSelective(targetDesign);
+                }
+                // 将对应的列  和 对应的数据保存
+                // FIXME 当前登录用户id
+                String userId = "2583";
+                List<UserTargetDesignClumnname> clumnNamesList = userTargetDesignClumnnameMapper.selectByUseridAndTarDesParId(userId,targetDesignParentId);
+                List<String> collect = clumnNamesList.stream().map(item -> item.getClumnid()).collect(Collectors.toList());
+
+                List<TargetDesignClumnName> targetDesignClumnNames = null;
+                if (collect.size()>0){
+                    targetDesignClumnNames = targetDesignClumnNameMapper.selectAll(collect);
+                }else{
+                    targetDesignClumnNames = new ArrayList<>();
+                }
+                for (TargetDesignClumnName targetDesignClumnName : targetDesignClumnNames) {
+                    targetDesignClumnName.setId(targetDesignClumnName.getId()+uuid2);
+                    targetDesignClumnNameMapper.insertSelective(targetDesignClumnName);
+                }
+            }else{
+                // 保存
+            }
+            return 1;
+        }catch (Exception e){
+            e.printStackTrace();
+            return 2;
+        }
+    }
+
+
+
+    /**
+     * @Author dingyf
+     * @Description //指标表设计树形结构删除校验
+     * @Date 2020/10/28 16:13
+     * @Param [quataSearchResponse]
+     * @return int
+     **/
+    @Override
+    @Transactional
+    public int targetDesignParentOrTargetDesignDelete(QuataSearchResponse quataSearchResponse) {
+        try {
+            String targetDesignParentId = quataSearchResponse.getTargetDesignParentId();
+            // 根据DesignParentId删除
+            if (Strings.isNotBlank(targetDesignParentId)){
+                // 根据父id查询子数据(递归查询)
+                List<TargetDesignParent> list = targetDesignParentMapper.seletByParentId(targetDesignParentId);
+                // 循环删除
+                for (TargetDesignParent targetDesignParent : list) {
+                    //删除
+                    targetDesignParentMapper.deleteByPrimaryKey(targetDesignParent.getId());
+                    //用户删除
+                    userTargetDesignClumnnameMapper.deleteByTargetDesignParentid(targetDesignParent.getId());
+                    List<TargetDesign> targetDesignDataByTargetDesignParentId = targetDesignMapper.getTargetDesignDataByTargetDesignParentId(targetDesignParent.getId());
+                    for (TargetDesign targetDesign : targetDesignDataByTargetDesignParentId) {
+                        // 删除
+                        targetDesignClumnDataMapper.deleteByTargetDesignId(targetDesign.getId());
+                        //删除
+                    }
+                    //删除
+                    targetDesignMapper.deleteByTargetDesignParentid(targetDesignParent.getId());
+                    //删除
+                    userTargetDesignParentidMapper.deleteByTargetDesignParentid(targetDesignParent.getId());
+                }
+            }else{
+                // 根据DesignId删除
+                String targetDesignId = quataSearchResponse.getTargetDesignId();
+                // 根据父id查询子数据(递归查询)
+                List<TargetDesign> list = targetDesignMapper.seletByParentId(targetDesignId);
+                for (TargetDesign targetDesign : list) {
+                    // 删除
+                    targetDesignClumnDataMapper.deleteByTargetDesignId(targetDesign.getId());
+                }
+            }
+            return 1;
+        }catch (Exception e){
+            e.printStackTrace();
+            return 2;
+        }
+
     }
 }

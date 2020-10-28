@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gisquest.plan.service.dao.UserTargetDesignClumnnameMapper" >
+  <resultMap id="BaseResultMap" type="com.gisquest.plan.service.model.UserTargetDesignClumnname.UserTargetDesignClumnname" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="clumnid" property="clumnid" jdbcType="VARCHAR" />
+    <result column="tar_des_parid" property="tarDesParid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userid, clumnid,tar_des_parid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_target_design_clumnname
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByTargetDesignParentid" parameterType="java.lang.String" >
+    delete from user_target_design_clumnname
+    where tar_des_parid = #{targetDesignParentId,jdbcType=VARCHAR}
+  </delete>
+  <select id="selectByUseridAndTarDesParId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_target_design_clumnname
+    where userid = #{userId,jdbcType=VARCHAR}
+    and tar_des_parid = #{tarPid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_target_design_clumnname
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.gisquest.plan.service.model.UserTargetDesignClumnname.UserTargetDesignClumnname" >
+    insert into user_target_design_clumnname (id, userid, clumnid
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{clumnid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gisquest.plan.service.model.UserTargetDesignClumnname.UserTargetDesignClumnname" >
+    insert into user_target_design_clumnname
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="clumnid != null" >
+        clumnid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="clumnid != null" >
+        #{clumnid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gisquest.plan.service.model.UserTargetDesignClumnname.UserTargetDesignClumnname" >
+    update user_target_design_clumnname
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="clumnid != null" >
+        clumnid = #{clumnid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gisquest.plan.service.model.UserTargetDesignClumnname.UserTargetDesignClumnname" >
+    update user_target_design_clumnname
+    set userid = #{userid,jdbcType=VARCHAR},
+      clumnid = #{clumnid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

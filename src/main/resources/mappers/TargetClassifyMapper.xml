@@ -8,11 +8,42 @@
     <result column="business_parentid" property="businessParentid" jdbcType="VARCHAR" />
     <result column="desc" property="desc" jdbcType="VARCHAR" />
   </resultMap>
-
+  <resultMap id="BaseResultMap1" type="com.gisquest.plan.service.vo.quata.targetClassifyResponse" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="alias" property="alias" jdbcType="INTEGER" />
+    <result column="parentid" property="parentid" jdbcType="VARCHAR" />
+    <result column="desc" property="desc" jdbcType="VARCHAR" />
+  </resultMap>
   <select id="getTable" parameterType="java.lang.String" resultMap="BaseResultMap">
     select * from target_classify
     where id = #{quataId,jdbcType=VARCHAR};
   </select>
+  <select id="getTargetDesignAddIndicatorParentTree"  resultMap="BaseResultMap1">
+       SELECT
+	res."id",
+	'' AS parentid,
+	res."type"
+FROM
+	resource_classify res
 
+  </select>
+    <select id="getTargetDesignAddIndicatorParentTree1"  resultMap="BaseResultMap1"  parameterType="java.lang.String" >
+   	SELECT
+		bus."id",
+		bus.resource_parentid parentid,
+		bus."type"
+	FROM
+		business_classify bus
 
+  </select>
+    <select id="getTargetDesignAddIndicatorParentTree2"  resultMap="BaseResultMap1"  parameterType="java.lang.String" >
+      SELECT
+			tar.business_parentid parentid,
+			tar."id",
+			tar."type"
+		FROM
+			target_classify tar
+
+  </select>
 </mapper>

@@ -40,6 +40,17 @@
     delete from target_design_clumn_data
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+  <delete id="deleteByTargetDesignId" parameterType="java.lang.String" >
+    delete from target_design_clumn_data
+    where target_design_id = #{designId,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="selectBytargetDesignId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from target_design_clumn_data
+    where target_design_id = #{designId,jdbcType=VARCHAR}
+  </select>
   <insert id="insert" parameterType="com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData" >
     insert into target_design_clumn_data (id, type, target_design_id, 
       extend1, extend2, extend3, 

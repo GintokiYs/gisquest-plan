@@ -28,7 +28,7 @@ public class TargetDesignTreeDataUtil {
                 Map<String, Object> treeMap = new HashMap<String, Object>();
                 treeMap.put("id", dt.getId());
                 treeMap.put("isfile", "2".equals(dt.getExtend1()));
-                treeMap.put("label", dt.getExtend2());
+                treeMap.put("label", dt.getType());
                 treeMap.put("pId", "0");
                 treeMap.put("children",new ArrayList<Map<String, Object>>());
                 firstNodeList.add(treeMap);

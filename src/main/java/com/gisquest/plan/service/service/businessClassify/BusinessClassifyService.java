@@ -39,4 +39,10 @@ public interface BusinessClassifyService {
     List<targetClassifyResponse>  addTargetDesignAddColumn(QuataSearchResponse quataSearchResponse);
     // 查询指标表设计生成EXCEL并下载
     ResponseResult downloadTargetDesignList(QuataSearchResponse quataSearchResponse);
+
+    List<Map<String, Object>> getTargetDesignAddIndicatorParentTree();
+
+    int addTargetDesignSaveOrSaveAs(QuataSearchResponse quataSearchResponse);
+
+    int targetDesignParentOrTargetDesignDelete(QuataSearchResponse quataSearchResponse);
 }

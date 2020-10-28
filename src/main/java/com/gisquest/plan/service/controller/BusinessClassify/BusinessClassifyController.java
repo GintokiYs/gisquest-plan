@@ -67,10 +67,26 @@ public class BusinessClassifyController {
             return ResponseResult.error("指标表设计树形结构添加插入失败");
         }
     }
+    @ApiOperation("指标表设计树形结构删除")
+    @PostMapping("/targetDesignParentOrTargetDesignDelete")
+    public ResponseResult targetDesignParentOrTargetDesignDelete(@RequestBody QuataSearchResponse quataSearchResponse) {
+        int i = businessClassifyService.targetDesignParentOrTargetDesignDelete(quataSearchResponse);
+        if (i == 1){
+            return ResponseResult.ok(200,"删除成功");
+        }else{
+            return ResponseResult.error("删除失败");
+        }
+    }
+
     @ApiOperation("指标表设计树形结构")
     @GetMapping("/getTargetDesignParentTree")
     public ResponseResult getTargetDesignParentTree() {
         return ResponseResult.ok(businessClassifyService.getTargetDesignParentTree());
+    }
+    @ApiOperation("指标表设计器新增指标树形结构获取")
+    @GetMapping("/getTargetDesignAddIndicatorParentTree")
+    public ResponseResult getTargetDesignAddIndicatorParentTree() {
+        return ResponseResult.ok(businessClassifyService.getTargetDesignAddIndicatorParentTree());
     }
     @ApiOperation("根据指标设计id获取相关联数据")
     @PostMapping ("/getTargetDesignDataByTargetDesignParentId")
@@ -97,5 +113,15 @@ public class BusinessClassifyController {
     @PostMapping("/addTargetDesignAddColumn")
     public ResponseResult addTargetDesignAddColumn(@RequestBody QuataSearchResponse quataSearchResponse) {
         return ResponseResult.ok(businessClassifyService.addTargetDesignAddColumn(quataSearchResponse));
+    }
+    @ApiOperation("指标表设计保存或者另存为")
+    @PostMapping("/addTargetDesignSaveOrSaveAs")
+    public ResponseResult addTargetDesignSaveOrSaveAs(@RequestBody QuataSearchResponse quataSearchResponse) {
+        int i = businessClassifyService.addTargetDesignSaveOrSaveAs(quataSearchResponse);
+        if (i == 1){
+            return ResponseResult.ok(200,"成功");
+        }else{
+            return ResponseResult.error("指标表设计保存或者另存为失败");
+        }
     }
 }

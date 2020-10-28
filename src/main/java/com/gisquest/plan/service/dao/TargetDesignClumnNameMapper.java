@@ -1,6 +1,7 @@
 package com.gisquest.plan.service.dao;
 
 import com.gisquest.plan.service.model.targetDesignClumnName.TargetDesignClumnName;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +18,9 @@ public interface TargetDesignClumnNameMapper {
 
     int updateByPrimaryKey(TargetDesignClumnName record);
 
-    List<TargetDesignClumnName> selectAll();
+    List<TargetDesignClumnName> selectAll(@Param("ids") List<String> collect);
 
-    int selectMax();
+    int selectMax( @Param("targetDesignParentId") String targetDesignParentId);
+
+
 }

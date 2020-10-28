@@ -24,6 +24,27 @@ public class targetClassifyResponse implements Serializable {
 
     private String columnId;
 
+    private String parentid;
+
+    private String type;
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getParentid() {
+        return parentid;
+    }
+
+    public void setParentid(String parentid) {
+        this.parentid = parentid;
+    }
+
     public String getColumnId() {
         return columnId;
     }

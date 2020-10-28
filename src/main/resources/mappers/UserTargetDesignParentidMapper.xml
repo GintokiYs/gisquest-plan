@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gisquest.plan.service.dao.UserTargetDesignParentidMapper" >
+  <resultMap id="BaseResultMap" type="com.gisquest.plan.service.model.UserTargetDesignParentid.UserTargetDesignParentid" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="target_design_parentid" property="targetDesignParentid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userid, target_design_parentid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_target_design_parentid
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByTargetDesignParentId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_target_design_parentid
+    where target_design_parentid = #{targetDesignParentId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByUserid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user_target_design_parentid
+    where userid = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_target_design_parentid
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByTargetDesignParentid" parameterType="java.lang.String" >
+    delete from user_target_design_parentid
+    where target_design_parentid = #{targetDesignParentId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.gisquest.plan.service.model.UserTargetDesignParentid.UserTargetDesignParentid" >
+    insert into user_target_design_parentid (id, userid, target_design_parentid
+      )
+    values (#{id,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{targetDesignParentid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gisquest.plan.service.model.UserTargetDesignParentid.UserTargetDesignParentid" >
+    insert into user_target_design_parentid
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="targetDesignParentid != null" >
+        target_design_parentid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="targetDesignParentid != null" >
+        #{targetDesignParentid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gisquest.plan.service.model.UserTargetDesignParentid.UserTargetDesignParentid" >
+    update user_target_design_parentid
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="targetDesignParentid != null" >
+        target_design_parentid = #{targetDesignParentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gisquest.plan.service.model.UserTargetDesignParentid.UserTargetDesignParentid" >
+    update user_target_design_parentid
+    set userid = #{userid,jdbcType=VARCHAR},
+      target_design_parentid = #{targetDesignParentid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

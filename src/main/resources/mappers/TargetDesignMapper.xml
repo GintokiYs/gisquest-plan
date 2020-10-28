@@ -26,23 +26,28 @@
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="getTargetDesignDataByTargetDesignParentId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-
-    SELECT
-
-    classify."type" AS TYPE,
-    design."id",
-    design.area,
-    design.parentid,
-    design."alias",
-    design.target_parentid,
-    design."column_name",
-    design.column_data,
-    design.extend1,
-    design."type" extend2
-    FROM
-    target_design design
-    LEFT JOIN target_classify classify ON design.target_parentid = classify."id"
-    where target_design_parent_id = #{targetDesignParentId,jdbcType=VARCHAR}
+      SELECT
+          (
+              CASE
+              WHEN (design.target_parentid IS NULL) THEN
+                  design."type"
+              ELSE
+                  classify."type"
+              END
+          ) AS "type",
+          design."id",
+          design.area,
+          design.parentid,
+          design."alias",
+          design.target_parentid,
+          design."column_name",
+          design.column_data,
+          design.extend1
+      FROM
+          target_design design
+      LEFT JOIN target_classify classify ON design.target_parentid = classify."id"
+      WHERE
+           target_design_parent_id = #{targetDesignParentId,jdbcType=VARCHAR}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -179,7 +184,35 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.gisquest.plan.service.model.targetDesign.TargetDesign" >
+  <delete id="deleteByTargetDesignParentid" parameterType="java.lang.String" >
+    delete from target_design
+    where target_design_parent_id = #{targetDesignParentId,jdbcType=VARCHAR}
+  </delete>
+    <select id="seletByParentId" resultMap="BaseResultMap"   parameterType="java.lang.String">
+       WITH RECURSIVE r AS (
+        SELECT
+            *
+        FROM
+            target_design place
+        WHERE
+            id = #{targetDesignId}
+        UNION ALL
+            SELECT
+                place.*
+            FROM
+                target_design as place,
+                r
+            WHERE
+                place.parentid = r. ID
+    ) SELECT
+        *
+    FROM
+        r
+    ORDER BY
+        ID;
+  </select>
+
+    <update id="updateByPrimaryKey" parameterType="com.gisquest.plan.service.model.targetDesign.TargetDesign" >
     update target_design
     set parentid = #{parentid,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},

@@ -1,5 +1,7 @@
 package com.gisquest.plan.service.vo.quata;
 
+import com.gisquest.plan.service.model.TargetDesignClumnData.TargetDesignClumnData;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -47,14 +49,57 @@ public class QuataSearchResponse implements Serializable {
     private String fileOrDir; // 文件or文件夹(1文件夹,2文件)
 
     private String targetDesignParentId;// 指标设计选择id
-    private List<String> targetClassifyIds; //指标集合ids
+    private List<String> targetIds; //指标集合ids
 
     /******指标表设计添加列*******/
+    private String targetDesignId;
     private String addColumnType;// 添加列类型
     private String columnName; //列名
     //区域代码
-    private String areaCode;
 
+    private String areaCode;
+    private String saveOrSaveAs; //保存1  还是另存为2
+
+    // 用作新增或者另存为将数据从前她传递封装
+    private List<TargetDesignClumnData> targetDesignClumnData;
+    public String getTargetDesignId() {
+        return targetDesignId;
+    }
+
+    public void setTargetDesignId(String targetDesignId) {
+        this.targetDesignId = targetDesignId;
+    }
+
+    public List<String> getTargetIds() {
+        return targetIds;
+    }
+
+    public void setTargetIds(List<String> targetIds) {
+        this.targetIds = targetIds;
+    }
+
+
+
+
+    public List<TargetDesignClumnData> getTargetDesignClumnData() {
+        return targetDesignClumnData;
+    }
+
+    public void setTargetDesignClumnData(List<TargetDesignClumnData> targetDesignClumnData) {
+        this.targetDesignClumnData = targetDesignClumnData;
+    }
+
+    public String getSaveOrSaveAs() {
+        return saveOrSaveAs;
+    }
+
+    public void setSaveOrSaveAs(String saveOrSaveAs) {
+        this.saveOrSaveAs = saveOrSaveAs;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
 
     public String getAreaCode() {
@@ -234,11 +279,4 @@ public class QuataSearchResponse implements Serializable {
         this.targetDesignParentId = targetDesignParentId;
     }
 
-    public List<String> getTargetClassifyIds() {
-        return targetClassifyIds;
-    }
-
-    public void setTargetClassifyIds(List<String> targetClassifyIds) {
-        this.targetClassifyIds = targetClassifyIds;
-    }
 }

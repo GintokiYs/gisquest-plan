@@ -22,8 +22,36 @@
     select
     <include refid="Base_Column_List" />
     from target_design_parent
+    where id in
+    <foreach collection="targetDesignParentIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
 
   </select>
+  <select id="seletByParentId" resultMap="BaseResultMap"   parameterType="java.lang.String">
+       WITH RECURSIVE r AS (
+        SELECT
+            *
+        FROM
+            target_design_parent place
+        WHERE
+            id = #{targetDesignParentId}
+        UNION ALL
+            SELECT
+                place.*
+            FROM
+                target_design_parent as place,
+                r
+            WHERE
+                place.parentid = r. ID
+    ) SELECT
+        *
+    FROM
+        r
+    ORDER BY
+        ID;
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from target_design_parent
     where id = #{id,jdbcType=VARCHAR}

@@ -13,11 +13,12 @@
   <sql id="Base_Column_List" >
     id, type, extend1, extend2, extend3, sequence, isdelete
   </sql>
-  <select id="selectMax" resultType="int">
+  <select id="selectMax" resultType="int"  parameterType="java.lang.String" >
     select 
-   "count"(*)  AS sequence
+   "count"(1)  AS sequence
     from target_design_name
     where isdelete = '0'
+    and extend3 = #{targetDesignParentId,jdbcType=VARCHAR}
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
@@ -25,11 +26,19 @@
     from target_design_name
     where id = #{id,jdbcType=VARCHAR}
   </select>
+
   <select id="selectAll" resultMap="BaseResultMap"  >
     select
     <include refid="Base_Column_List" />
     from target_design_name
     where isdelete = '0'
+    <if test="ids != null || ids != ''" >
+      and id in
+      <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from target_design_name
