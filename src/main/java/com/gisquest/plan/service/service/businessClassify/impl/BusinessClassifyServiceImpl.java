@@ -18,6 +18,7 @@ import com.gisquest.plan.service.service.businessClassify.BusinessClassifyServic
 import com.gisquest.plan.service.utils.*;
 import com.gisquest.plan.service.vo.ResponseResult;
 import com.gisquest.plan.service.vo.quata.*;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -553,6 +554,22 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletResponse response = attributes.getResponse();
         List<Map<String, Object>> result = getTargetDesignDataByTargetDesignParentId(quataSearchResponse);
+        // 将数据转换
+        List<String> list = new ArrayList<>();
+        List<List<String>> lists = new ArrayList<>();
+        Map<String, Object> map = new HashMap();
+
+        map.put("id","");
+        map.put("isfile",false);
+        map.put("pId","");
+        map.put("children",result);
+        List<List<String>> resultList = treeToListUtil.treeToList2(map,lists,list);
+
+
+
+
+
+
 
         // 通过工具类创建writer，创建xlsx格式
         // 查询列名
@@ -573,7 +590,7 @@ public class BusinessClassifyServiceImpl implements BusinessClassifyService {
         List<List<String>> data = new ArrayList<>();
         //标题
         List<String> rowData = new ArrayList();
-        rowData.add("序号");
+//        rowData.add("序号");
         rowData.add("领域");
         rowData.add("指标");
         //标题
